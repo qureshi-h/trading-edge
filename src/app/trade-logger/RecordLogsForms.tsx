@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { Dayjs } from 'dayjs';
 
 import {
     Form,
@@ -20,6 +21,7 @@ import {
 
 import { Stock } from '@/types/stocks';
 import './style.css';
+import { api } from '@/utils/api';
 
 const { Option } = Select;
 
@@ -31,7 +33,7 @@ type FieldType = {
     stock: string;
     trader: string;
     price: number;
-    date: undefined;
+    date: Dayjs | undefined;
     rationale: string;
     units: number;
 };
@@ -47,14 +49,37 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
         setTradeType(key);
     };
 
-    const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-        console.log('Success:', values);
-        messageApi.open({
-            type: 'success',
-            content: 'Trade Logged Succesfully!',
-        });
-        form.resetFields();
-        setSelectedStock(null);
+    const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
+        const tradePayload = {
+            stock_id: values.stock,
+            trader_name: values.trader,
+            trade_type: tradeType,
+            price: values.price,
+            trade_date: values.date?.toISOString(),
+            units: values.units,
+            rationale: values.rationale,
+        };
+
+        try {
+            const response = await api.post('/api/trades', tradePayload);
+
+            if (response.status === 201) {
+                messageApi.open({
+                    type: 'success',
+                    content: 'Trade logged successfully!',
+                });
+                form.resetFields();
+                setSelectedStock(null);
+            } else {
+                throw new Error('Failed to log the trade');
+            }
+        } catch (error) {
+            console.error('Error logging trade:', error);
+            messageApi.open({
+                type: 'error',
+                content: 'An error occurred while logging the trade.',
+            });
+        }
     };
 
     const handleStockChange = (stockId: number) => {
@@ -157,11 +182,11 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
 
                 {/* Buy/Sale Date */}
                 <Form.Item
-                    label={` Date`}
+                    label={`Date`}
                     name="date"
                     rules={[{ required: true, message: `Please select the ${tradeType} date!` }]}
                 >
-                    <DatePicker className="w-full" />
+                    <DatePicker className="w-full " />
                 </Form.Item>
 
                 {/* Units */}

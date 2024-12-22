@@ -3,14 +3,15 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
-      "dev": "next dev -H 0.0.0.0",
-      "build": "next build",
+        "dev": "next dev -H 0.0.0.0",
+        "build": "next build",
         "start": "react-scripts start --host 0.0.0.0",
         "lint": "next lint"
     },
     "dependencies": {
         "@types/next": "^9.0.0",
         "antd": "^5.22.5",
+        "dayjs": "^1.11.13",
         "next": "15.1.2",
         "react": "^19.0.0",
         "react-dom": "^19.0.0"
