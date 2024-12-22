@@ -1,8 +1,8 @@
 // const API_URL = 'http://localhost:5001';
 const API_URL = 'http://170.64.209.213:5001';
 
-interface ApiResponse {
-    data: any;
+interface ApiResponse<T = unknown> {
+    data: T;
     status: number;
 }
 
@@ -11,7 +11,7 @@ interface ApiParams {
 }
 
 export const api = {
-    get: async (endpoint: string, params: ApiParams = {}): Promise<ApiResponse> => {
+    get: async <T>(endpoint: string, params: ApiParams = {}): Promise<ApiResponse<T>> => {
         const url = new URL(endpoint, API_URL);
         Object.keys(params).forEach((key) => url.searchParams.append(key, String(params[key])));
 
@@ -26,7 +26,7 @@ export const api = {
         return { data, status: response.status };
     },
 
-    post: async (endpoint: string, body: object): Promise<ApiResponse> => {
+    post: async <T>(endpoint: string, body: object): Promise<ApiResponse<T>> => {
         const response = await fetch(new URL(endpoint, API_URL).toString(), {
             method: 'POST',
             headers: {
