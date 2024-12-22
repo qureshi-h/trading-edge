@@ -14,6 +14,7 @@ import {
     Flex,
     Typography,
     FormProps,
+    ConfigProvider,
     // message,
 } from 'antd';
 
@@ -27,12 +28,12 @@ interface RecordLogsFormsProps {
 }
 
 type FieldType = {
-    stock?: string;
-    trader?: string;
-    price?: number;
-    date?: undefined;
-    rationale?: string;
-    units?: number;
+    stock: string;
+    trader: string;
+    price: number;
+    date: undefined;
+    rationale: string;
+    units: number;
 };
 
 const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
@@ -96,7 +97,7 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
                 <Form.Item
                     label="Stock"
                     name="stock"
-                    rules={[{ required: false, message: 'Please select a stock!' }]}
+                    rules={[{ required: true, message: 'Please select a stock!' }]}
                 >
                     <Select
                         showSearch
@@ -129,7 +130,7 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
                 <Form.Item
                     label="Trader Name"
                     name="trader"
-                    rules={[{ required: false, message: 'Please select a trader!' }]}
+                    rules={[{ required: true, message: 'Please select a trader!' }]}
                 >
                     <Select placeholder="Select Trader">
                         <Option value="Cyle">Cyle</Option>
@@ -142,7 +143,7 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
                 <Form.Item
                     label={` Price`}
                     name="price"
-                    rules={[{ required: false, message: `Please enter the ${tradeType} price!` }]}
+                    rules={[{ required: true, message: `Please enter the ${tradeType} price!` }]}
                 >
                     <InputNumber
                         placeholder={`Enter ${tradeType} price`}
@@ -155,7 +156,7 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
                 <Form.Item
                     label={` Date`}
                     name="date"
-                    rules={[{ required: false, message: `Please select the ${tradeType} date!` }]}
+                    rules={[{ required: true, message: `Please select the ${tradeType} date!` }]}
                 >
                     <DatePicker className="w-full" />
                 </Form.Item>
@@ -165,7 +166,7 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
                     label="Units"
                     name="units"
                     rules={[
-                        { required: false, message: 'Please enter the number of units!' },
+                        { required: true, message: 'Please enter the number of units!' },
                         { type: 'integer', message: 'Units must be a valid integer!' },
                     ]}
                 >
@@ -176,16 +177,18 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
                 <Form.Item
                     label="Rationale"
                     name="rationale"
-                    rules={[{ required: false, message: 'Please enter a rationale!' }]}
+                    rules={[{ required: true, message: 'Please enter a rationale!' }]}
                 >
                     <Input placeholder="Enter rationale" className="w-full" />
                 </Form.Item>
 
                 {/* Submit Button */}
                 <Form.Item className="text-center" label={null}>
-                    <Button type="primary" htmlType="submit">
-                        Submit Trade
-                    </Button>
+                    <ConfigProvider wave={{ disabled: true }}>
+                        <Button type="primary" htmlType="submit">
+                            Submit Trade
+                        </Button>
+                    </ConfigProvider>
                 </Form.Item>
             </Form>
         </Flex>
