@@ -93,11 +93,13 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
                 layout="vertical"
                 onFinish={onFinish}
                 className="w-full bg-white p-6 rounded-lg shadow-md"
+                size="large"
             >
                 <Form.Item
                     label="Stock"
                     name="stock"
                     rules={[{ required: true, message: 'Please select a stock!' }]}
+                    style={{ marginBottom: 5 }}
                 >
                     <Select
                         showSearch
@@ -113,17 +115,15 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
                     </Select>
                 </Form.Item>
                 {/* Displaying Stock Exchange */}
-                <Flex align="center" className="mt-2 ml-2" justify="center">
-                    {selectedStock && (
-                        <Flex gap="middle">
-                            <Typography.Text>
-                                <strong>Sector:</strong> {selectedStock.sector}
-                            </Typography.Text>
-                            <Typography.Text>
-                                <strong>Exchange:</strong> {selectedStock.exchange}
-                            </Typography.Text>
-                        </Flex>
-                    )}
+                <Flex align="center" className="ml-2 my-0" justify="center">
+                    <Flex gap="middle" style={{ opacity: selectedStock ? 1 : 0 }}>
+                        <Typography.Text>
+                            <strong>Sector:</strong> {selectedStock?.sector}
+                        </Typography.Text>
+                        <Typography.Text>
+                            <strong>Exchange:</strong> {selectedStock?.exchange}
+                        </Typography.Text>
+                    </Flex>
                 </Flex>
 
                 {/* Trader Name */}
