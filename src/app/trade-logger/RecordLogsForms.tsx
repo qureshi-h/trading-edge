@@ -74,9 +74,12 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
     ];
 
     return (
-        <Flex vertical className="w-1/3" justify="center" align="center">
+        <Flex vertical className="w-full md:w-1/3" justify="center" align="center">
             {contextHolder}
-            <Typography.Title style={{ color: 'white', textAlign: 'center' }} className="mb-2">
+            <Typography.Title
+                style={{ color: 'white', textAlign: 'center' }}
+                className="mb-2 text-xl sm:text-2xl"
+            >
                 Trade Logger
             </Typography.Title>
             <Tabs
@@ -92,7 +95,7 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
                 form={form}
                 layout="vertical"
                 onFinish={onFinish}
-                className="w-full bg-white p-6 rounded-lg shadow-md"
+                className="w-full bg-white p-4 sm:p-6 rounded-lg shadow-md"
                 size="large"
             >
                 <Form.Item
