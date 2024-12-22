@@ -15,7 +15,7 @@ import {
     Typography,
     FormProps,
     ConfigProvider,
-    // message,
+    message,
 } from 'antd';
 
 import { Stock } from '@/types/stocks';
@@ -37,7 +37,9 @@ type FieldType = {
 };
 
 const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
-    // const [messageApi, contextHolder] = message.useMessage();
+    const [form] = Form.useForm();
+
+    const [messageApi, contextHolder] = message.useMessage();
     const [tradeType, setTradeType] = React.useState('buy');
     const [selectedStock, setSelectedStock] = React.useState<Stock | null>(null);
 
@@ -47,14 +49,12 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
 
     const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
         console.log('Success:', values);
-        // messageApi.open({
-        //     type: 'success',
-        //     content: 'Trade Logged Succesfully!',
-        // });
-    };
-
-    const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
-        console.log('Failed:', errorInfo);
+        messageApi.open({
+            type: 'success',
+            content: 'Trade Logged Succesfully!',
+        });
+        form.resetFields();
+        setSelectedStock(null);
     };
 
     const handleStockChange = (stockId: number) => {
@@ -75,7 +75,7 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
 
     return (
         <Flex vertical className="w-1/3" justify="center" align="center">
-            {/* {contextHolder} */}
+            {contextHolder}
             <Typography.Title style={{ color: 'white', textAlign: 'center' }} className="mb-2">
                 Trade Logger
             </Typography.Title>
@@ -89,9 +89,9 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
                 className="custom-tabs"
             />
             <Form
+                form={form}
                 layout="vertical"
                 onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
                 className="w-full bg-white p-6 rounded-lg shadow-md"
             >
                 <Form.Item
