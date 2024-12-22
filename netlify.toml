@@ -1,0 +1,9 @@
+[build]
+  publish = "out"  # or the folder where your build output is located
+  command = "next build"
+
+[[redirects]]
+  from = "/api/*"
+  to = "http://170.64.209.213:5001/api/:splat"
+  status = 200
+  force = true

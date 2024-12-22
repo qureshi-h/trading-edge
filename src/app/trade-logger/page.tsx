@@ -7,7 +7,7 @@ import { Stock } from '@/types/stocks';
 
 const Page = async () => {
     const stocks: Stock[] = await api
-        .get<Stock[]>('/stocks/all')
+        .get<Stock[]>('/api/stocks/all')
         .then((response) => response.data)
         .catch((err) => {
             console.error(err);
