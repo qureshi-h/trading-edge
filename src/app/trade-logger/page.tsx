@@ -2,17 +2,11 @@ import React from 'react';
 
 import RecordLogsForms from './components/RecordLogsForms';
 
-import { api } from '@/utils/api';
 import { Stock } from '@/types/stocks';
+import { fetchStocks } from '@/utils/stocks';
 
 const Page = async () => {
-    const stocks: Stock[] = await api
-        .get<Stock[]>('/api/stocks/all')
-        .then((response) => response.data)
-        .catch((err) => {
-            console.error(err);
-            return [];
-        });
+    const stocks: Stock[] = await fetchStocks();
 
     return (
         <div
