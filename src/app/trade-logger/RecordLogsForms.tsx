@@ -49,7 +49,7 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
     const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
     const [isOptions, setIsOptions] = useState(false);
     const [timeToExpire, setTimeToExpire] = useState<string | null>(null);
-    const [tradeDate, setTradeDate] = useState<Dayjs | null>(null);
+    const [tradeDate, setTradeDate] = useState<Dayjs | undefined>();
 
     // Function to calculate the "Time to Expire" based on trade date and expiration date
     const calculateTimeToExpire = () => {
