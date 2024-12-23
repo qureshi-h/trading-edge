@@ -15,10 +15,16 @@ interface ApiParams {
 
 export const api = {
     get: async <T>(endpoint: string, params: ApiParams = {}): Promise<ApiResponse<T>> => {
-        const url = new URL(endpoint, API_URL);
-        Object.keys(params).forEach((key) => url.searchParams.append(key, String(params[key])));
+        // const url = new URL(endpoint, API_URL);
+        // Object.keys(params).forEach((key) => url.searchParams.append(key, String(params[key])));
 
-        const response = await fetch(url.toString(), {
+        // const response = await fetch(url.toString(), {
+        //     method: 'GET',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        // });
+        const response = await fetch(endpoint.toString(), {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -30,14 +36,20 @@ export const api = {
     },
 
     post: async <T>(endpoint: string, body: object): Promise<ApiResponse<T>> => {
-        const response = await fetch(new URL(endpoint, API_URL).toString(), {
+        // const response = await fetch(new URL(endpoint, API_URL).toString(), {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify(body),
+        // });
+        const response = await fetch(endpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(body),
         });
-
         const data = await response.json();
         return { data, status: response.status };
     },
