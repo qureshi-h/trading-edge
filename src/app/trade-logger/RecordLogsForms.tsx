@@ -129,7 +129,12 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
     ];
 
     return (
-        <Flex vertical className="w-full md:w-full lg:w-1/3" justify="center" align="center">
+        <Flex
+            vertical
+            className="w-full md:w-full lg:w-1/3  overflow-x-scroll"
+            justify="center"
+            align="center"
+        >
             {contextHolder}
             <Typography.Title
                 style={{ color: 'white', textAlign: 'center' }}
@@ -150,7 +155,7 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
                 form={form}
                 layout="vertical"
                 onFinish={onFinish}
-                className="w-full bg-white p-4 sm:p-6 rounded-lg shadow-md"
+                className="w-full bg-white p-4 sm:p-6 rounded-lg shadow-md  overflow-x-scroll"
                 size="large"
                 initialValues={{ tradeType: 'stock' }}
                 onValuesChange={handleFormValuesChange}
@@ -219,7 +224,7 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
                     rules={[{ required: true, message: `Please enter the ${tradeType} price!` }]}
                 >
                     <InputNumber
-                        placeholder={`Enter ${tradeType} price`}
+                        placeholder={`Enter ${tradeType} Price`}
                         min={0}
                         className="w-full"
                     />
