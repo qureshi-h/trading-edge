@@ -3,6 +3,6 @@ command = "npm run build"
 publish = "build"
 
 [[redirects]]
-from = "/api/stocks/all"
+from = "https://170.64.209.213:5001/api/stocks/all"
 to = "http://170.64.209.213:5001/api/stocks/all"
 status = 200
