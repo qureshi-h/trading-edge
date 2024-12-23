@@ -227,6 +227,7 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
                         placeholder={`Enter ${tradeType} Price`}
                         min={0}
                         className="w-full"
+                        prefix="$"
                     />
                 </Form.Item>
 
@@ -237,18 +238,6 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
                     rules={[{ required: true, message: `Please select the ${tradeType} date!` }]}
                 >
                     <DatePicker className="w-full" placeholder={`Enter ${tradeType} Date`} />
-                </Form.Item>
-
-                {/* Units */}
-                <Form.Item
-                    label="Units"
-                    name="units"
-                    rules={[
-                        { required: true, message: 'Please enter the number of units!' },
-                        { type: 'integer', message: 'Units must be a valid integer!' },
-                    ]}
-                >
-                    <InputNumber placeholder="Enter Number of Units" min={1} className="w-full" />
                 </Form.Item>
 
                 {/* Option Fields (Only display if "Options" is selected) */}
@@ -274,49 +263,74 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
                                 placeholder="Enter Strike Price"
                                 min={0}
                                 className="w-full"
+                                prefix="$"
+                                precision={2}
                             />
                         </Form.Item>
 
                         {tradeType === 'Buy' && (
-                            <Form.Item
-                                label="Expiration Date"
-                                name="expiration_date"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Please select the expiration date!',
-                                    },
-                                ]}
-                                style={{ marginBottom: 5 }}
-                            >
-                                <DatePicker
-                                    className="w-full"
-                                    placeholder={`Enter Expiration Date`}
-                                    minDate={tradeDate}
-                                    disabled={!tradeDate}
-                                />
-                            </Form.Item>
+                            <>
+                                <Form.Item
+                                    label="Expiration Date"
+                                    name="expiration_date"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Please select the expiration date!',
+                                        },
+                                    ]}
+                                    style={{ marginBottom: 5 }}
+                                >
+                                    <DatePicker
+                                        className="w-full"
+                                        placeholder={`Enter Expiration Date`}
+                                        minDate={tradeDate}
+                                        disabled={!tradeDate}
+                                    />
+                                </Form.Item>
+
+                                {/* Displaying Time to Expire */}
+                                <Flex align="center" className="ml-2 my-0" justify="center">
+                                    <Flex gap="middle" style={{ opacity: timeToExpire ? 1 : 0 }}>
+                                        <Typography.Text>
+                                            <strong>Time to Expire:</strong> {timeToExpire}
+                                        </Typography.Text>
+                                    </Flex>
+                                </Flex>
+                            </>
                         )}
-
-                        {/* Displaying Time to Expire */}
-                        <Flex align="center" className="ml-2 my-0" justify="center">
-                            <Flex gap="middle" style={{ opacity: timeToExpire ? 1 : 0 }}>
-                                <Typography.Text>
-                                    <strong>Time to Expire:</strong> {timeToExpire}
-                                </Typography.Text>
-                            </Flex>
-                        </Flex>
-
-                        {/* Rationale */}
-                        <Form.Item
-                            label="Rationale"
-                            name="rationale"
-                            rules={[{ required: true, message: 'Please enter a rationale!' }]}
-                        >
-                            <Input placeholder="Enter Rationale" className="w-full" />
-                        </Form.Item>
                     </>
                 )}
+
+                {/* Units */}
+                <Form.Item
+                    label={`${isOptions ? 'Contracts' : 'Units'}`}
+                    name="units"
+                    rules={[
+                        {
+                            required: true,
+                            message: `Please enter the number of ${
+                                isOptions ? 'contracts' : 'inits'
+                            }!`,
+                        },
+                        { type: 'integer', message: 'Units must be a valid integer!' },
+                    ]}
+                >
+                    <InputNumber
+                        placeholder={`Enter Number of ${isOptions ? 'Contracts' : 'Units'}`}
+                        min={1}
+                        className="w-full"
+                    />
+                </Form.Item>
+
+                {/* Rationale */}
+                <Form.Item
+                    label="Rationale"
+                    name="rationale"
+                    rules={[{ required: true, message: 'Please enter a rationale!' }]}
+                >
+                    <Input placeholder="Enter Rationale" className="w-full" />
+                </Form.Item>
 
                 {/* Submit Button */}
                 <Form.Item className="text-center" label={null}>
