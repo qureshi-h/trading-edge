@@ -1,6 +1,6 @@
 import React from 'react';
 
-import RecordLogsForms from './RecordLogsForms';
+import RecordLogsForms from './components/RecordLogsForms';
 
 import { api } from '@/utils/api';
 import { Stock } from '@/types/stocks';

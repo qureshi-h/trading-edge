@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useReducer, useState } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import {
     Form,
@@ -18,9 +18,10 @@ import {
     message,
 } from 'antd';
 
-import { Stock } from '@/types/stocks';
-import './style.css';
+import { HeldStock, Stock } from '@/types/stocks';
 import { api } from '@/utils/api';
+import './style.css';
+import { initialState, reducer } from '../reducer';
 
 const { Option } = Select;
 
@@ -29,8 +30,9 @@ interface RecordLogsFormsProps {
 }
 
 type FieldType = {
-    stock: string;
+    stock: number;
     trader: string;
+    trade_type: string;
     price: number;
     date: Dayjs | undefined;
     rationale: string;
@@ -44,11 +46,8 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
     const [form] = Form.useForm();
 
     const [messageApi, contextHolder] = message.useMessage();
-    const [tradeType, setTradeType] = useState('Buy');
-    const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
-    const [isOptions, setIsOptions] = useState(false);
-    const [timeToExpire, setTimeToExpire] = useState<string | null>(null);
-    const [tradeDate, setTradeDate] = useState<Dayjs | undefined>();
+    const [tab, setTab] = useState('Buy');
+    const [state, dispatch] = useReducer(reducer, initialState);
 
     // Function to calculate the "Time to Expire" based on trade date and expiration date
     const calculateTimeToExpire = () => {
@@ -57,29 +56,77 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
 
         if (tradeDate && expirationDate) {
             const diffInDays = dayjs(expirationDate).diff(dayjs(tradeDate), 'days');
-            setTimeToExpire(diffInDays >= 0 ? `${diffInDays} days` : 'Expired!');
+            dispatch({
+                type: 'SET_TIME_TO_EXPIRE',
+                payload: diffInDays >= 0 ? `${diffInDays} days` : 'Expired!',
+            });
+        }
+    };
+
+    const getCurrentlyHeldStocks = async () => {
+        const trader = form.getFieldValue('trader');
+        const tradeType = form.getFieldValue('trade_type');
+
+        if (trader && tradeType) {
+            const response = await api
+                .get<{ holdings: HeldStock[]; message?: string }>(
+                    '/api/trades/holdings/' + trader,
+                    {
+                        trade_type: tradeType.toLowerCase(),
+                    },
+                )
+                .then((response) => {
+                    if (response.status === 200) return response.data.holdings;
+                    else if (response.status === 404) return [] as HeldStock[];
+                    else throw new Error(response.data.message);
+                })
+                .catch((err) => {
+                    console.error(err);
+                    return [] as HeldStock[];
+                });
+            if (
+                !state.selectedStock ||
+                !response.find((stock) => state.selectedStock?.stock_id === stock.stock_id)
+            ) {
+                form.setFieldValue('stock', undefined);
+                form.setFieldValue('units', undefined);
+                dispatch({ type: 'SET_SELECTED_STOCK', payload: null });
+            }
+            dispatch({ type: 'SET_CURRENTLY_HELD_STOCKS', payload: response });
         }
     };
 
     const handleFormValuesChange = (changedValues: Partial<FieldType>) => {
-        // Only calculate time to expire if the relevant fields changed
         if (changedValues.date || changedValues.expiration_date) {
             calculateTimeToExpire();
         }
         if (changedValues.date) {
-            setTradeDate(changedValues.date);
+            dispatch({ type: 'SET_TRADE_DATE', payload: changedValues.date });
+        }
+        if (tab === 'Sell' && (changedValues.trader || changedValues.trade_type)) {
+            getCurrentlyHeldStocks();
+        }
+        if (tab === 'Sell' && changedValues.stock) {
+            const stockData = state.currentlyHeldStocks?.find(
+                (stock) => stock.stock_id === changedValues.stock,
+            );
+
+            const units = stockData?.net_units || 0;
+            dispatch({ type: 'SET_NET_UNITS', payload: units });
+            form.setFieldValue('units', units);
         }
     };
 
     const handleTabChange = (key: string) => {
-        setTradeType(key);
+        if (key === 'Sell') getCurrentlyHeldStocks();
+        setTab(key);
     };
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         const tradePayload = {
             stock_id: values.stock,
             trader_name: values.trader,
-            trade_type: tradeType.toLowerCase(),
+            trade_type: tab.toLowerCase(),
             price: values.price,
             trade_date: values.date,
             units: values.units,
@@ -97,9 +144,7 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
                     type: 'success',
                     content: 'Trade logged successfully!',
                 });
-                form.resetFields();
-                setSelectedStock(null);
-                setTimeToExpire(null);
+                resetForm();
             } else {
                 throw new Error('Failed to log the trade');
             }
@@ -112,9 +157,14 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
         }
     };
 
+    const resetForm = () => {
+        form.resetFields();
+        dispatch({ type: 'RESET' });
+    };
+
     const handleStockChange = (stockId: number) => {
         const stock = stocks.find((s) => s.stock_id === stockId);
-        setSelectedStock(stock || null);
+        dispatch({ type: 'SET_SELECTED_STOCK', payload: stock || null });
     };
 
     const items: TabsProps['items'] = [
@@ -157,18 +207,22 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
                 onFinish={onFinish}
                 className="w-full bg-white p-4 sm:p-6 rounded-lg shadow-md  overflow-x-scroll"
                 size="large"
-                initialValues={{ tradeType: 'stock' }}
+                initialValues={{ trade_type: 'stock' }}
                 onValuesChange={handleFormValuesChange}
             >
                 {/* Select Stock or Options */}
                 <Form.Item
                     label="Trade Type"
-                    name="tradeType"
+                    name="trade_type"
                     rules={[{ required: true, message: 'Please select a trade type!' }]}
                 >
-                    <Select onChange={(value) => setIsOptions(value === 'options')}>
+                    <Select
+                        onChange={(value) =>
+                            dispatch({ type: 'SET_IS_OPTIONS', payload: value === 'options' })
+                        }
+                    >
                         <Option value="stock">Stock</Option>
-                        <Option value="options">Options</Option>
+                        <Option value="options">Option</Option>
                     </Select>
                 </Form.Item>
 
@@ -197,22 +251,28 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
                         optionFilterProp="children"
                         onChange={handleStockChange}
                     >
-                        {stocks.map((stock) => (
-                            <Option value={stock.stock_id} key={stock.stock_id}>
-                                {stock.stock_symbol} - {stock.stock_name}
-                            </Option>
-                        ))}
+                        {tab === 'Sell'
+                            ? state.currentlyHeldStocks?.map((stock) => (
+                                  <Option value={stock.stock_id} key={stock.stock_id}>
+                                      {stock.stock_symbol} - {stock.stock_name}
+                                  </Option>
+                              ))
+                            : stocks.map((stock) => (
+                                  <Option value={stock.stock_id} key={stock.stock_id}>
+                                      {stock.stock_symbol} - {stock.stock_name}
+                                  </Option>
+                              ))}
                     </Select>
                 </Form.Item>
 
                 {/* Displaying Stock Exchange */}
                 <Flex align="center" className="ml-2 my-0" justify="center">
-                    <Flex gap="middle" style={{ opacity: selectedStock ? 1 : 0 }}>
+                    <Flex gap="middle" style={{ opacity: state.selectedStock ? 1 : 0 }}>
                         <Typography.Text>
-                            <strong>Sector:</strong> {selectedStock?.sector}
+                            <strong>Sector:</strong> {state.selectedStock?.sector}
                         </Typography.Text>
                         <Typography.Text>
-                            <strong>Exchange:</strong> {selectedStock?.exchange}
+                            <strong>Exchange:</strong> {state.selectedStock?.exchange}
                         </Typography.Text>
                     </Flex>
                 </Flex>
@@ -221,10 +281,10 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
                 <Form.Item
                     label={`Price`}
                     name="price"
-                    rules={[{ required: true, message: `Please enter the ${tradeType} price!` }]}
+                    rules={[{ required: true, message: `Please enter the ${tab} price!` }]}
                 >
                     <InputNumber
-                        placeholder={`Enter ${tradeType} Price`}
+                        placeholder={`Enter ${tab} Price`}
                         min={0}
                         className="w-full"
                         prefix="$"
@@ -235,13 +295,13 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
                 <Form.Item
                     label={`Date`}
                     name="date"
-                    rules={[{ required: true, message: `Please select the ${tradeType} date!` }]}
+                    rules={[{ required: true, message: `Please select the ${tab} date!` }]}
                 >
-                    <DatePicker className="w-full" placeholder={`Enter ${tradeType} Date`} />
+                    <DatePicker className="w-full" placeholder={`Enter ${tab} Date`} />
                 </Form.Item>
 
                 {/* Option Fields (Only display if "Options" is selected) */}
-                {isOptions && (
+                {state.isOptions && (
                     <>
                         <Form.Item
                             label="Option Type"
@@ -268,7 +328,7 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
                             />
                         </Form.Item>
 
-                        {tradeType === 'Buy' && (
+                        {tab === 'Buy' && (
                             <>
                                 <Form.Item
                                     label="Expiration Date"
@@ -284,16 +344,19 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
                                     <DatePicker
                                         className="w-full"
                                         placeholder={`Enter Expiration Date`}
-                                        minDate={tradeDate}
-                                        disabled={!tradeDate}
+                                        minDate={state.tradeDate}
+                                        disabled={!state.tradeDate}
                                     />
                                 </Form.Item>
 
                                 {/* Displaying Time to Expire */}
                                 <Flex align="center" className="ml-2 my-0" justify="center">
-                                    <Flex gap="middle" style={{ opacity: timeToExpire ? 1 : 0 }}>
+                                    <Flex
+                                        gap="middle"
+                                        style={{ opacity: state.timeToExpire ? 1 : 0 }}
+                                    >
                                         <Typography.Text>
-                                            <strong>Time to Expire:</strong> {timeToExpire}
+                                            <strong>Time to Expire:</strong> {state.timeToExpire}
                                         </Typography.Text>
                                     </Flex>
                                 </Flex>
@@ -304,22 +367,23 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
 
                 {/* Units */}
                 <Form.Item
-                    label={`${isOptions ? 'Contracts' : 'Units'}`}
+                    label={`${state.isOptions ? 'Contracts' : 'Units'}`}
                     name="units"
                     rules={[
                         {
                             required: true,
                             message: `Please enter the number of ${
-                                isOptions ? 'contracts' : 'inits'
+                                state.isOptions ? 'contracts' : 'inits'
                             }!`,
                         },
                         { type: 'integer', message: 'Units must be a valid integer!' },
                     ]}
                 >
                     <InputNumber
-                        placeholder={`Enter Number of ${isOptions ? 'Contracts' : 'Units'}`}
+                        placeholder={`Enter Number of ${state.isOptions ? 'Contracts' : 'Units'}`}
                         min={1}
                         className="w-full"
+                        max={state.netUnits}
                     />
                 </Form.Item>
 
