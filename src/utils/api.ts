@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+// const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // if (!API_URL) {
 //     throw new Error('NEXT_PUBLIC_API_URL is not defined in the environment variables.');
@@ -14,7 +14,8 @@ interface ApiParams {
 }
 
 export const api = {
-    get: async <T>(endpoint: string, params: ApiParams = {}): Promise<ApiResponse<T>> => {
+    // get: async <T>(endpoint: string, params: ApiParams = {}): Promise<ApiResponse<T>> => {
+    get: async <T>(endpoint: string): Promise<ApiResponse<T>> => {
         // const url = new URL(endpoint, API_URL);
         // Object.keys(params).forEach((key) => url.searchParams.append(key, String(params[key])));
 
