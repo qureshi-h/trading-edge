@@ -25,7 +25,7 @@ export const api = {
         //         'Content-Type': 'application/json',
         //     },
         // });
-        const response = await fetch(endpoint.toString(), {
+        const response = await fetch('/api/stocks/all', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
