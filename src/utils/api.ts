@@ -9,9 +9,9 @@ interface ApiResponse<T = unknown> {
     status: number;
 }
 
-interface ApiParams {
-    [key: string]: string | number | boolean;
-}
+// interface ApiParams {
+//     [key: string]: string | number | boolean;
+// }
 
 export const api = {
     // get: async <T>(endpoint: string, params: ApiParams = {}): Promise<ApiResponse<T>> => {
