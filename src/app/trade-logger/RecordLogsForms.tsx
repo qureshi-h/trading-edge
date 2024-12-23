@@ -38,7 +38,6 @@ type FieldType = {
     option_type: string;
     strike_price: number;
     expiration_date: Dayjs | undefined;
-    option_contracts: number;
 };
 
 const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
@@ -88,7 +87,6 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
             option_type: values.option_type,
             strike_price: values.strike_price,
             expiration_date: values.expiration_date,
-            option_contracts: values.option_contracts,
         };
 
         try {
@@ -248,15 +246,6 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
                     <InputNumber placeholder="Enter Number of Units" min={1} className="w-full" />
                 </Form.Item>
 
-                {/* Rationale */}
-                <Form.Item
-                    label="Rationale"
-                    name="rationale"
-                    rules={[{ required: true, message: 'Please enter a rationale!' }]}
-                >
-                    <Input placeholder="Enter Rationale" className="w-full" />
-                </Form.Item>
-
                 {/* Option Fields (Only display if "Options" is selected) */}
                 {isOptions && (
                     <>
@@ -313,21 +302,13 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
                             </Flex>
                         </Flex>
 
+                        {/* Rationale */}
                         <Form.Item
-                            label="Option Contracts"
-                            name="option_contracts"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please enter the number of contracts!',
-                                },
-                            ]}
+                            label="Rationale"
+                            name="rationale"
+                            rules={[{ required: true, message: 'Please enter a rationale!' }]}
                         >
-                            <InputNumber
-                                placeholder="Enter Number of Contracts"
-                                min={1}
-                                className="w-full"
-                            />
+                            <Input placeholder="Enter Rationale" className="w-full" />
                         </Form.Item>
                     </>
                 )}
