@@ -9,13 +9,12 @@ interface ApiResponse<T = unknown> {
     status: number;
 }
 
-// interface ApiParams {
-//     [key: string]: string | number | boolean;
-// }
+interface ApiParams {
+    [key: string]: string | number | boolean;
+}
 
 export const api = {
-    // get: async <T>(endpoint: string, params: ApiParams = {}): Promise<ApiResponse<T>> => {
-    get: async <T>(endpoint: string): Promise<ApiResponse<T>> => {
+    get: async <T>(endpoint: string, params: ApiParams = {}): Promise<ApiResponse<T>> => {
         // const url = new URL(endpoint, API_URL);
         // Object.keys(params).forEach((key) => url.searchParams.append(key, String(params[key])));
 
@@ -25,6 +24,8 @@ export const api = {
         //         'Content-Type': 'application/json',
         //     },
         // });
+        console.log(endpoint, params);
+
         const response = await fetch('/api/stocks/all', {
             method: 'GET',
             headers: {
