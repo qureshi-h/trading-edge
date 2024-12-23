@@ -16,7 +16,7 @@ const Page = async () => {
 
     return (
         <div
-            className="flex flex-col items-center justify-center min-h-screen px-4 py-10 max-h-screen"
+            className="flex flex-col items-center justify-center h-screen px-4 md:py-10 lg:py-0"
             style={{
                 backgroundImage: `url('/image.png')`,
                 backgroundSize: 'cover',

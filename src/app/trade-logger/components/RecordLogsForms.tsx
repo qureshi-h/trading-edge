@@ -181,7 +181,7 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
     return (
         <Flex
             vertical
-            className="w-full md:w-full lg:w-1/3  overflow-x-scroll"
+            className="w-full md:w-full lg:w-1/3 lg:h-17/20 overflow-y-scroll"
             justify="center"
             align="center"
         >
