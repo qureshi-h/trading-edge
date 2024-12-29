@@ -17,7 +17,7 @@ const Page = async ({ params }: { params: Promise<{ stock_code: string }> }) => 
             vertical
             align="center"
             justify="center"
-            className="min-h-screen px-4 md:py-10 lg:py-0 gap-5f"
+            className="min-h-screen px-4 md:py-10 lg:py-0"
             style={{
                 backgroundImage: `url('/image.png')`,
                 backgroundSize: 'cover',
@@ -25,7 +25,7 @@ const Page = async ({ params }: { params: Promise<{ stock_code: string }> }) => 
                 backgroundAttachment: 'fixed',
             }}
         >
-            <Col className="backdrop-blur-3xl" xs={24} sm={24} md={16} lg={16}>
+            <Col className="backdrop-blur-3xl rounded-sm p-2" xs={24} sm={24} md={16} lg={16}>
                 <StockInfo stockInfo={stockInfo} />
                 <StockReport
                     stockCode={stock_code}

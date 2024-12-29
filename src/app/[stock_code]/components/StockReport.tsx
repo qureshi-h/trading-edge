@@ -53,7 +53,7 @@ const TabContent = ({
     if (!stockAnalysis) {
         return (
             <Flex>
-                <Text className="!text-gray-400 !text-center w-full">
+                <Text className="!p-5 text-base !text-gray-400 !text-center w-full">
                     No Analysis for {date} found!
                 </Text>
             </Flex>

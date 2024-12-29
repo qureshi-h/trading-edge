@@ -10,6 +10,10 @@
     color: white;
 }
 
+.ant-btn:disabled {
+    color: rgb(198, 195, 195);
+}
+
 .stock-report * > .ant-typography {
     font-size: inherit;
     line-height: inherit;
