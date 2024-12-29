@@ -1,12 +1,13 @@
 'use client';
 
 import React, { Suspense } from 'react';
-import { Tabs, Spin, Flex, Splitter, Typography, Row, Col } from 'antd';
+import { Tabs, Spin, Flex, Row, Col } from 'antd';
 import Text from 'antd/es/typography/Text';
 
 import { StockAnalysis } from '@/types/stocks';
 import { fetchStockAnalysis } from '@/utils/stocks';
 import { getDatesExcludingWeekends } from '@/utils/dates';
+import { getColorClassFromRange } from '@/utils/colour';
 
 import '@/app/style.css';
 
@@ -80,19 +81,48 @@ const TabContent = ({
                         <strong>Close Price: </strong>
                         {stockAnalysis.close_price}
                     </Text>
-                    <Text>
-                        <strong>Breakout Percentage: </strong>
-                        {stockAnalysis.breakout_percentage}%
-                    </Text>
-                    <Text>
-                        <strong>Consecutive Days Above Trendline: </strong>
-
-                        {stockAnalysis.consecutive_days_above_trendline}
-                    </Text>
-                    <Text>
-                        <strong>Trendline Accuracy: </strong>
-                        {stockAnalysis.trendline_accuracy}%
-                    </Text>
+                    {stockAnalysis.breakout_percentage !== null ? (
+                        <>
+                            <Text>
+                                <strong>Breakout Percentage: </strong>
+                                <Text
+                                    className={getColorClassFromRange(
+                                        stockAnalysis.breakout_percentage,
+                                        -20,
+                                        20,
+                                    )}
+                                >
+                                    {stockAnalysis.breakout_percentage}%
+                                </Text>
+                            </Text>
+                            <Text>
+                                <strong>Consecutive Days Above Trendline: </strong>
+                                <Text
+                                    className={getColorClassFromRange(
+                                        stockAnalysis.consecutive_days_above_trendline,
+                                        0,
+                                        5,
+                                    )}
+                                >
+                                    {stockAnalysis.consecutive_days_above_trendline}
+                                </Text>
+                            </Text>
+                            <Text>
+                                <strong>Trendline Accuracy: </strong>
+                                <Text
+                                    className={getColorClassFromRange(
+                                        stockAnalysis.trendline_accuracy,
+                                        0,
+                                        100,
+                                    )}
+                                >
+                                    {stockAnalysis.trendline_accuracy}%
+                                </Text>
+                            </Text>
+                        </>
+                    ) : (
+                        <Text className="!my-2 !text-gray-400">Breakout data unavailable</Text>
+                    )}
                 </Flex>
             </Col>
 
@@ -107,15 +137,32 @@ const TabContent = ({
                 <Flex vertical>
                     <Text>
                         <strong>RSI Value: </strong>
-                        {stockAnalysis.rsi_value}
+                        <Text
+                            className={getColorClassFromRange(
+                                stockAnalysis.rsi_value,
+                                0,
+                                100,
+                                true,
+                            )}
+                        >
+                            {stockAnalysis.rsi_value}
+                        </Text>
                     </Text>
                     <Text>
                         <strong>MACD Value: </strong>
-                        {stockAnalysis.macd_value}
+                        <Text
+                            className={getColorClassFromRange(stockAnalysis.macd_value, -100, 100)}
+                        >
+                            {stockAnalysis.macd_value}
+                        </Text>
                     </Text>
                     <Text>
                         <strong>MACD Signal: </strong>
-                        {stockAnalysis.macd_signal}
+                        <Text
+                            className={getColorClassFromRange(stockAnalysis.macd_signal, -100, 100)}
+                        >
+                            {stockAnalysis.macd_signal}
+                        </Text>
                     </Text>
                     <Text>
                         <strong>Upper Bollinger Band: </strong>
@@ -151,15 +198,39 @@ const TabContent = ({
                     </Text>
                     <Text>
                         <strong>9 EMA: </strong>
-                        {stockAnalysis.nine_ema}
+                        <Text
+                            className={getColorClassFromRange(
+                                stockAnalysis.nine_ema,
+                                stockAnalysis.close_price * 0.8,
+                                stockAnalysis.close_price * 1.2,
+                            )}
+                        >
+                            {stockAnalysis.nine_ema}
+                        </Text>
                     </Text>
                     <Text>
                         <strong>12 EMA: </strong>
-                        {stockAnalysis.twelve_ema}
+                        <Text
+                            className={getColorClassFromRange(
+                                stockAnalysis.twelve_ema,
+                                stockAnalysis.close_price * 0.8,
+                                stockAnalysis.close_price * 1.2,
+                            )}
+                        >
+                            {stockAnalysis.twelve_ema}
+                        </Text>
                     </Text>
                     <Text>
                         <strong>21 EMA: </strong>
-                        {stockAnalysis.twenty_one_ema}
+                        <Text
+                            className={getColorClassFromRange(
+                                stockAnalysis.twenty_one_ema,
+                                stockAnalysis.close_price * 0.8,
+                                stockAnalysis.close_price * 1.2,
+                            )}
+                        >
+                            {stockAnalysis.twenty_one_ema}
+                        </Text>
                     </Text>
                 </Flex>
             </Col>

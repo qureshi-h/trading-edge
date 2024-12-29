@@ -6,6 +6,18 @@ export default {
         './src/components/**/*.{js,ts,jsx,tsx,mdx}',
         './src/app/**/*.{js,ts,jsx,tsx,mdx}',
     ],
+    safelist: [
+        '!text-green-800',
+        '!text-green-700',
+        '!text-green-600',
+        '!text-green-500',
+        '!text-yellow-500',
+        '!text-orange-500',
+        '!text-red-500',
+        '!text-red-600',
+        '!text-red-700',
+    ],
+
     theme: {
         extend: {
             colors: {
@@ -18,7 +30,4 @@ export default {
         },
     },
     plugins: [],
-    // corePlugins: {
-    //     preflight: false,
-    // },
 } satisfies Config;
