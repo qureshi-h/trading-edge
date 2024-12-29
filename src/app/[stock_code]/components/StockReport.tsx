@@ -275,7 +275,7 @@ const StockReport = ({ defaultStockAnalyses, stockCode }: StockReportProps) => {
 
     const tabItems = dates.map((date, index) => ({
         key: index === 0 ? 'today' : index.toString(),
-        label: date,
+        label: index === 0 ? 'Today' : date,
         children: (
             <Suspense fallback={<Spin tip="Loading tab content..." />}>
                 <TabContent
