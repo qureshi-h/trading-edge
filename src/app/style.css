@@ -1,8 +1,16 @@
 .custom-tabs .ant-tabs-tab {
     color: white;
-  }
-  
-  .custom-tabs .ant-tabs-tab-active {
+}
+
+.custom-tabs .ant-tabs-tab-active {
     color: #1890ff;
-  }
-  
+}
+
+.ant-typography {
+    color: white;
+}
+
+.stock-report * > .ant-typography {
+    font-size: inherit;
+    line-height: inherit;
+}
