@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, Select, Typography } from 'antd';
+import {  Select, Typography } from 'antd';
 
 import { Stock } from '@/types/stocks';
 
