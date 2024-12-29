@@ -42,7 +42,7 @@ const TabContent = ({
 
             loadStockAnalysis();
         }
-    }, [stockCode, date, cachedData]);
+    }, [stockCode, date, cachedData, updateCachedAnalysis]);
 
     if (loading) {
         return (
@@ -121,7 +121,7 @@ const TabContent = ({
                             </Text>
                         </>
                     ) : (
-                        <Text className="!my-2 !text-gray-400">Breakout data unavailable</Text>
+                        <Text className="!my-2 !text-gray-400f">Breakout data unavailable</Text>
                     )}
                 </Flex>
             </Col>
