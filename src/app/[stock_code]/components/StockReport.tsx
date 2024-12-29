@@ -29,8 +29,6 @@ const TabContent = ({
     const [loading, setLoading] = React.useState<boolean>(cachedData[date] === undefined);
 
     React.useEffect(() => {
-        console.log(cachedData);
-
         if (cachedData[date] === undefined) {
             const loadStockAnalysis = async () => {
                 setLoading(true);
@@ -275,7 +273,12 @@ const StockReport = ({ defaultStockAnalyses, stockCode }: StockReportProps) => {
     }));
 
     return (
-        <Tabs defaultActiveKey="today" tabPosition="top" items={tabItems} className="custom-tabs" />
+        <Tabs
+            defaultActiveKey="today"
+            tabPosition="top"
+            items={tabItems}
+            className="custom-tabs mx-3 sm:mx-2"
+        />
     );
 };
 

@@ -17,7 +17,7 @@ const StockInfo: React.FC<StockInfoProps> = ({ stockInfo }) => {
             {stockInfo ? (
                 <Flex
                     vertical
-                    className="backdrop-blur-3xl p-5 rounded-md"
+                    className="p-5 rounded-md"
                     align="center"
                     justify="flex-start"
                 >

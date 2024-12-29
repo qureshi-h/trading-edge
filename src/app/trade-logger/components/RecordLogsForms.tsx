@@ -179,8 +179,6 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
         },
     ];
 
-    console.log(stocks);
-
     return (
         <Flex
             vertical
