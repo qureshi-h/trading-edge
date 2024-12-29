@@ -18,10 +18,11 @@ import {
     message,
 } from 'antd';
 
+import { initialState, reducer } from '../reducer';
 import { HeldStock, Stock } from '@/types/stocks';
 import { api } from '@/utils/api';
-import './style.css';
-import { initialState, reducer } from '../reducer';
+
+import '@/app/style.css';
 
 const { Option } = Select;
 
@@ -177,6 +178,8 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
             label: 'Sell',
         },
     ];
+
+    console.log(stocks);
 
     return (
         <Flex
