@@ -96,11 +96,15 @@ const TabContent = ({
                             <Text>
                                 <strong>Consecutive Days Above Trendline: </strong>
                                 <Text
-                                    className={getColorClassFromRange(
-                                        stockAnalysis.consecutive_days_above_trendline,
-                                        0,
-                                        5,
-                                    )}
+                                    className={
+                                        stockAnalysis.consecutive_days_above_trendline > 1
+                                            ? getColorClassFromRange(
+                                                  stockAnalysis.consecutive_days_above_trendline,
+                                                  -1,
+                                                  7,
+                                              )
+                                            : 'text-gray-500'
+                                    }
                                 >
                                     {stockAnalysis.consecutive_days_above_trendline}
                                 </Text>
@@ -228,6 +232,18 @@ const TabContent = ({
                             )}
                         >
                             {stockAnalysis.twenty_one_ema}
+                        </Text>
+                    </Text>
+                    <Text>
+                        <strong>50 EMA: </strong>
+                        <Text
+                            className={getColorClassFromRange(
+                                stockAnalysis.fifty_ema,
+                                stockAnalysis.close_price * 0.8,
+                                stockAnalysis.close_price * 1.2,
+                            )}
+                        >
+                            {stockAnalysis.fifty_ema}
                         </Text>
                     </Text>
                 </Flex>
