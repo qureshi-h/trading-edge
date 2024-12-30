@@ -10,6 +10,7 @@ import { getDatesExcludingWeekends } from '@/utils/dates';
 import { getColorClassFromRange } from '@/utils/colour';
 
 import '@/app/style.css';
+import dayjs from 'dayjs';
 
 // Lazy load the content for each tab
 const TabContent = ({
@@ -54,7 +55,7 @@ const TabContent = ({
         return (
             <Flex>
                 <Text className="!p-5 text-base !text-gray-400 !text-center w-full">
-                    No Analysis for {date} found!
+                    No Analysis for {dayjs(date).format('DD MMMM')} found!
                 </Text>
             </Flex>
         );
@@ -275,7 +276,7 @@ const StockReport = ({ defaultStockAnalyses, stockCode }: StockReportProps) => {
 
     const tabItems = dates.map((date, index) => ({
         key: index.toString(),
-        label: index === 0 ? 'Today' : date,
+        label: index === 0 ? 'Today' : dayjs(date).format('DD MMM'),
         children: (
             <Suspense fallback={<Spin tip="Loading..." />}>
                 <TabContent
