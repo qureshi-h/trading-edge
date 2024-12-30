@@ -1,9 +1,9 @@
 import React from 'react';
 import Image from 'next/image';
 
-import Title from 'antd/es/typography/Title';
-import Text from 'antd/es/typography/Text';
 import { Flex } from 'antd';
+import Text from 'antd/es/typography/Text';
+import Title from 'antd/es/typography/Title';
 
 import { Stock } from '@/types/stocks';
 
@@ -15,12 +15,7 @@ const StockInfo: React.FC<StockInfoProps> = ({ stockInfo }) => {
     return (
         <Flex vertical justify="center">
             {stockInfo ? (
-                <Flex
-                    vertical
-                    className="p-5 rounded-md"
-                    align="center"
-                    justify="flex-start"
-                >
+                <Flex vertical className="p-5 rounded-md" align="center" justify="flex-start">
                     <Title className="my-2 !text-4xl !sm:text-2xl !text-white">
                         {stockInfo.stock_name} ({stockInfo.stock_symbol})
                     </Title>

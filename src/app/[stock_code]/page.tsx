@@ -1,10 +1,14 @@
 import React from 'react';
+import { Col } from 'antd';
+
 import StockInfo from './components/StockInfo';
-import { fetchStock, fetchStockAnalysis } from '@/utils/stocks';
 import StockReport from './components/StockReport';
+import PageContainer from '@/components/PageContainer';
+
+import { fetchStock } from '@/utils/stocks';
+import { fetchStockAnalysis } from '@/utils/analysis';
 import { Stock, StockAnalysis } from '@/types/stocks';
 import { getDatesExcludingWeekends } from '@/utils/dates';
-import { Col, Flex } from 'antd';
 
 const Page = async ({ params }: { params: Promise<{ stock_code: string }> }) => {
     const { stock_code } = await params;
@@ -13,18 +17,7 @@ const Page = async ({ params }: { params: Promise<{ stock_code: string }> }) => 
     const stockAnalysis: StockAnalysis | null = await fetchStockAnalysis(stock_code, currentDate);
 
     return (
-        <Flex
-            vertical
-            align="center"
-            justify="center"
-            className="min-h-screen px-4 md:py-10 lg:py-0"
-            style={{
-                backgroundImage: `url('/image.png')`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundAttachment: 'fixed',
-            }}
-        >
+        <PageContainer>
             <Col className="backdrop-blur-3xl rounded-sm p-2" xs={24} sm={24} md={16} lg={16}>
                 <StockInfo stockInfo={stockInfo} />
                 <StockReport
@@ -32,7 +25,7 @@ const Page = async ({ params }: { params: Promise<{ stock_code: string }> }) => 
                     defaultStockAnalyses={{ [currentDate]: stockAnalysis }}
                 />
             </Col>
-        </Flex>
+        </PageContainer>
     );
 };
 

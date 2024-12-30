@@ -1,16 +1,16 @@
 'use client';
 
+import dayjs from 'dayjs';
 import React, { Suspense } from 'react';
-import { Tabs, Spin, Flex, Row, Col } from 'antd';
 import Text from 'antd/es/typography/Text';
+import { Tabs, Spin, Flex, Row, Col } from 'antd';
 
 import { StockAnalysis } from '@/types/stocks';
-import { fetchStockAnalysis } from '@/utils/stocks';
-import { getDatesExcludingWeekends } from '@/utils/dates';
+import { fetchStockAnalysis } from '@/utils/analysis';
 import { getColorClassFromRange } from '@/utils/colour';
+import { getDatesExcludingWeekends } from '@/utils/dates';
 
 import '@/app/style.css';
-import dayjs from 'dayjs';
 
 // Lazy load the content for each tab
 const TabContent = ({
