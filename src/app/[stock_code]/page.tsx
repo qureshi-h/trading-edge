@@ -29,7 +29,7 @@ const Page = async ({ params }: { params: Promise<{ stock_code: string }> }) => 
                 <StockInfo stockInfo={stockInfo} />
                 <StockReport
                     stockCode={stock_code}
-                    defaultStockAnalyses={{ today: stockAnalysis }}
+                    defaultStockAnalyses={{ [currentDate]: stockAnalysis }}
                 />
             </Col>
         </Flex>
