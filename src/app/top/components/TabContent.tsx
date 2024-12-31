@@ -25,7 +25,22 @@ const TabContent = ({
         cachedData[date] || null,
     );
     const [loading, setLoading] = React.useState<boolean>(cachedData[date] === undefined);
+    const [windowHeight, setWindowHeight] = React.useState<number>(0);
 
+    React.useEffect(() => {
+        if (typeof window !== 'undefined') {
+            setWindowHeight(window.innerHeight);
+
+            const handleResize = () => {
+                setWindowHeight(window.innerHeight);
+            };
+
+            window.addEventListener('resize', handleResize);
+            return () => {
+                window.removeEventListener('resize', handleResize);
+            };
+        }
+    }, []);
     React.useEffect(() => {
         if (cachedData[date] === undefined) {
             const loadStockAnalysis = async () => {
@@ -113,7 +128,10 @@ const TabContent = ({
                 dataSource={stockAnalysis}
                 columns={columns}
                 pagination={false}
-                scroll={{ x: 1000, y: 400 }}
+                scroll={{
+                    x: 1000,
+                    y: windowHeight > 910 ? 600 : 400,
+                }}
                 rowKey="analysis_id"
                 virtual={true}
                 className="w-full"
