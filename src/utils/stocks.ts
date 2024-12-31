@@ -1,5 +1,5 @@
 import { api } from './api';
-import { Stock, StockAnalysis } from '@/types/stocks';
+import { Stock } from '@/types/stocks';
 
 export const fetchStock = async (stockCode: string): Promise<Stock | null> => {
     try {
@@ -20,4 +20,3 @@ export const fetchStocks = async (): Promise<Stock[]> => {
         return [];
     }
 };
-

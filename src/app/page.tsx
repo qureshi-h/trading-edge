@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Col, Flex, Row } from 'antd';
+import { Col, Row } from 'antd';
 import StockSelector from './components/StockSelector';
 
 import { Stock } from '@/types/stocks';
