@@ -18,7 +18,7 @@ const Page = async () => {
     return (
         <PageContainer className="h-screen px-4 md:py-10 lg:py-0">
             <Flex vertical className="h-3/4 w-full sm:w-full md:w-5/6 lg:w-4/6">
-                <Title>Top Picks</Title>
+                <Title className="!text-white w-full !text-center">Top Picks</Title>
                 <TopAnalyses defaultStockAnalyses={{ [currentDate]: stockAnalysis }} />
             </Flex>
         </PageContainer>

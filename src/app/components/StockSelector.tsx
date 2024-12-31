@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import {  Select, Typography } from 'antd';
+import { Flex, Select, Typography } from 'antd';
 
 import { Stock } from '@/types/stocks';
 
@@ -26,11 +26,11 @@ const StockSelector = ({ stocks }: { stocks: Stock[] }) => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center w-full p-5 gap-4">
-            <Title level={2} className="!text-white">
+        <Flex vertical gap={5} align="center" justify="center" className="w-full p-5 pb-0">
+            <Title level={2} className="!text-white mb-0">
                 Select Stock
             </Title>
-            <div className="flex flex-col sm:flex-row items-center w-full gap-3">
+            <Flex vertical gap={5} align="center" className="sm:flex-row w-full gap-3">
                 <Select
                     showSearch
                     placeholder="Search by Stock Name or Code"
@@ -61,8 +61,8 @@ const StockSelector = ({ stocks }: { stocks: Stock[] }) => {
                 >
                     Go
                 </button>
-            </div>
-        </div>
+            </Flex>
+        </Flex>
     );
 };
 
