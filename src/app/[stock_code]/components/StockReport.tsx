@@ -6,7 +6,7 @@ import Text from 'antd/es/typography/Text';
 import { Tabs, Spin, Flex, Row, Col } from 'antd';
 
 import { StockAnalysis } from '@/types/stocks';
-import { fetchStockAnalysis } from '@/utils/analysis';
+import { fetchStockAnalysis } from '@/utils/api/analysis';
 import { getColorClassFromRange } from '@/utils/colour';
 import { getDatesExcludingWeekends } from '@/utils/dates';
 

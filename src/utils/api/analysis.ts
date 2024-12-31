@@ -20,11 +20,14 @@ export const fetchTopAnalysis = async (
     size = 20,
 ): Promise<{ rows: TopStock[]; finalPage: boolean } | null> => {
     try {
-        const response = await api.get<{ rows: TopStock[]; finalPage: boolean }>(`/api/analysis/top`, {
-            date,
-            page,
-            size,
-        });
+        const response = await api.get<{ rows: TopStock[]; finalPage: boolean }>(
+            `/api/analysis/top`,
+            {
+                date,
+                page,
+                size,
+            },
+        );
         return response.status === 200 ? response.data : null;
     } catch (err) {
         console.error('Error fetching stock analysis:', err);

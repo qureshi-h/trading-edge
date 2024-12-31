@@ -3,7 +3,7 @@ import React from 'react';
 import RecordLogsForms from './components/RecordLogsForms';
 
 import { Stock } from '@/types/stocks';
-import { fetchStocks } from '@/utils/stocks';
+import { fetchStocks } from '@/utils/api/stocks';
 
 const Page = async () => {
     const stocks: Stock[] = await fetchStocks();

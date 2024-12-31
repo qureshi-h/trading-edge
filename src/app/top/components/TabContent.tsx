@@ -7,7 +7,7 @@ import { Table, Spin, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 
 import { TopStock } from '@/types/stocks';
-import { fetchTopAnalysis } from '@/utils/analysis';
+import { fetchTopAnalysis } from '@/utils/api/analysis';
 
 const { Text } = Typography;
 
@@ -173,7 +173,9 @@ const TabContent = ({
             footer={() => (
                 <Flex
                     justify="right"
-                    className={`${loadMore ? '!text-blue-400 cursor-pointer' : '!text-gray-500'} `}
+                    className={`${
+                        loadMore ? '!text-blue-400 cursor-pointer' : '!text-gray-500 cursor-auto'
+                    } `}
                     onClick={handleLoadMore}
                 >
                     <Text className="!text-inherit !text-right w-full cursor-pointer">

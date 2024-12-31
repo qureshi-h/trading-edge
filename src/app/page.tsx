@@ -5,7 +5,7 @@ import Text from 'antd/es/typography/Text';
 import StockSelector from './components/StockSelector';
 
 import { Stock } from '@/types/stocks';
-import { fetchStocks } from '@/utils/stocks';
+import { fetchStocks } from '@/utils/api/stocks';
 import PageContainer from '@/components/PageContainer';
 import Link from 'next/link';
 

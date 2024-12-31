@@ -5,8 +5,8 @@ import StockInfo from './components/StockInfo';
 import StockReport from './components/StockReport';
 import PageContainer from '@/components/PageContainer';
 
-import { fetchStock } from '@/utils/stocks';
-import { fetchStockAnalysis } from '@/utils/analysis';
+import { fetchStock } from '@/utils/api/stocks';
+import { fetchStockAnalysis } from '@/utils/api/analysis';
 import { Stock, StockAnalysis } from '@/types/stocks';
 import { getDatesExcludingWeekends } from '@/utils/dates';
 

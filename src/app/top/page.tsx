@@ -6,7 +6,7 @@ import TopAnalyses from './components/TopAnalyses';
 import PageContainer from '@/components/PageContainer';
 
 import { TopStock } from '@/types/stocks';
-import { fetchTopAnalysis } from '@/utils/analysis';
+import { fetchTopAnalysis } from '@/utils/api/analysis';
 import { getDatesExcludingWeekends } from '@/utils/dates';
 
 import '@/app/style.css';
