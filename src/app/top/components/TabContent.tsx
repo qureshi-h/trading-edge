@@ -13,10 +13,12 @@ const { Text } = Typography;
 
 const TabContent = ({
     date,
+    finalPage,
     cachedData,
     updateCachedAnalysis,
 }: {
     date: string;
+    finalPage: boolean;
     cachedData: { [key: string]: TopStock[] | null };
     updateCachedAnalysis: (date: string, analysis: TopStock[] | null) => void;
 }) => {
@@ -25,6 +27,8 @@ const TabContent = ({
         cachedData[date] || null,
     );
     const [loading, setLoading] = React.useState<boolean>(cachedData[date] === undefined);
+    const [loadMore, setLoadMore] = React.useState<boolean>(!finalPage);
+
     const [windowHeight, setWindowHeight] = React.useState<number>(0);
 
     React.useEffect(() => {
@@ -41,19 +45,34 @@ const TabContent = ({
             };
         }
     }, []);
+
     React.useEffect(() => {
         if (cachedData[date] === undefined) {
             const loadStockAnalysis = async () => {
                 setLoading(true);
-                const analysis = await fetchTopAnalysis(date, 0, 10);
-                setStockAnalysis(analysis);
-                updateCachedAnalysis(date, analysis);
+                const response = await fetchTopAnalysis(date, 1, 10);
+                setStockAnalysis(response?.rows ?? []);
+                updateCachedAnalysis(date, response?.rows ?? []);
+                setLoadMore(!(response?.finalPage ?? true));
                 setLoading(false);
             };
 
             loadStockAnalysis();
         }
     }, [date, cachedData, updateCachedAnalysis]);
+
+    const handleLoadMore = async () => {
+        if (stockAnalysis && stockAnalysis.length % 10 === 0) {
+            fetchTopAnalysis(date, stockAnalysis?.length / 10 + 1, 10).then((response) => {
+                if (response !== null) {
+                    const newState = [...stockAnalysis, ...response.rows];
+                    setStockAnalysis(newState);
+                    updateCachedAnalysis(date, newState);
+                    setLoadMore(!(response?.finalPage ?? true));
+                }
+            });
+        }
+    };
 
     if (loading) {
         return (
@@ -140,20 +159,31 @@ const TabContent = ({
     ];
 
     return (
-        <div>
-            <Table
-                dataSource={stockAnalysis}
-                columns={columns}
-                pagination={false}
-                scroll={{
-                    x: 1000,
-                    y: windowHeight > 910 ? 600 : 400,
-                }}
-                rowKey="analysis_id"
-                virtual={true}
-                className="w-full"
-            />
-        </div>
+        <Table
+            dataSource={stockAnalysis}
+            columns={columns}
+            pagination={false}
+            scroll={{
+                x: 1000,
+                y: windowHeight > 910 ? 600 : 400,
+            }}
+            rowKey="analysis_id"
+            virtual={true}
+            className="w-full"
+            footer={() => (
+                <Flex
+                    justify="right"
+                    className={`${
+                        stockAnalysis?.length % 10 === 0
+                            ? '!text-blue-400 cursor-pointer'
+                            : '!text-gray-500'
+                    } `}
+                    onClick={handleLoadMore}
+                >
+                    <Text className="!text-inherit !text-right w-full cur">Load More</Text>
+                </Flex>
+            )}
+        />
     );
 };
 

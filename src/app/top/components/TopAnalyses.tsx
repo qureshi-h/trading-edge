@@ -11,6 +11,7 @@ import { getDatesExcludingWeekends } from '@/utils/dates';
 import '@/app/style.css';
 
 interface TopAnalysesProps {
+    finalPage: boolean;
     defaultStockAnalyses: {
         [key: string]: TopStock[] | null;
     };
@@ -35,6 +36,7 @@ const TopAnalyses: React.FC<TopAnalysesProps> = ({ defaultStockAnalyses }) => {
             dates={dates}
             renderContent={(date: string) => (
                 <TabContent
+                    finalPage
                     date={date}
                     cachedData={cachedAnalyses}
                     updateCachedAnalysis={updateCachedAnalysis}

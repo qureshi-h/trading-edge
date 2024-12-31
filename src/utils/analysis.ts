@@ -16,14 +16,14 @@ export const fetchStockAnalysis = async (
 
 export const fetchTopAnalysis = async (
     date: string,
-    offset = 0,
-    limit = 20,
-): Promise<TopStock[] | null> => {
+    page = 0,
+    size = 20,
+): Promise<{ rows: TopStock[]; finalPage: boolean } | null> => {
     try {
-        const response = await api.get<TopStock[]>(`/api/analysis/top`, {
+        const response = await api.get<{ rows: TopStock[]; finalPage: boolean }>(`/api/analysis/top`, {
             date,
-            offset,
-            limit,
+            page,
+            size,
         });
         return response.status === 200 ? response.data : null;
     } catch (err) {
