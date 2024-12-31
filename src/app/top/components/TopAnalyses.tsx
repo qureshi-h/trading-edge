@@ -17,7 +17,7 @@ interface TopAnalysesProps {
     };
 }
 
-const TopAnalyses: React.FC<TopAnalysesProps> = ({ defaultStockAnalyses }) => {
+const TopAnalyses: React.FC<TopAnalysesProps> = ({ finalPage, defaultStockAnalyses }) => {
     const [cachedAnalyses, setCachedAnalyses] = React.useState<{
         [key: string]: TopStock[] | null;
     }>(defaultStockAnalyses);
@@ -36,7 +36,7 @@ const TopAnalyses: React.FC<TopAnalysesProps> = ({ defaultStockAnalyses }) => {
             dates={dates}
             renderContent={(date: string) => (
                 <TabContent
-                    finalPage
+                    finalPage={finalPage}
                     date={date}
                     cachedData={cachedAnalyses}
                     updateCachedAnalysis={updateCachedAnalysis}

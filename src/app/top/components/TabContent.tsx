@@ -31,6 +31,8 @@ const TabContent = ({
 
     const [windowHeight, setWindowHeight] = React.useState<number>(0);
 
+    console.log(loadMore);
+
     React.useEffect(() => {
         if (typeof window !== 'undefined') {
             setWindowHeight(window.innerHeight);
@@ -62,7 +64,7 @@ const TabContent = ({
     }, [date, cachedData, updateCachedAnalysis]);
 
     const handleLoadMore = async () => {
-        if (stockAnalysis && stockAnalysis.length % 10 === 0) {
+        if (stockAnalysis && loadMore) {
             fetchTopAnalysis(date, stockAnalysis?.length / 10 + 1, 10).then((response) => {
                 if (response !== null) {
                     const newState = [...stockAnalysis, ...response.rows];
@@ -173,14 +175,12 @@ const TabContent = ({
             footer={() => (
                 <Flex
                     justify="right"
-                    className={`${
-                        stockAnalysis?.length % 10 === 0
-                            ? '!text-blue-400 cursor-pointer'
-                            : '!text-gray-500'
-                    } `}
+                    className={`${loadMore ? '!text-blue-400 cursor-pointer' : '!text-gray-500'} `}
                     onClick={handleLoadMore}
                 >
-                    <Text className="!text-inherit !text-right w-full cur">Load More</Text>
+                    <Text className="!text-inherit !text-right w-full cursor-pointer">
+                        Load More
+                    </Text>
                 </Flex>
             )}
         />
