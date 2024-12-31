@@ -97,7 +97,7 @@ const TabContent = ({
                       }),
                   )
                 : [],
-            onFilter: (value: any, record: TopStock) => record.stock_symbol.includes(value),
+            onFilter: (value, record) => record.stock_symbol.includes(value.toString()),
         },
         {
             title: 'Breakout %',
