@@ -31,8 +31,6 @@ const TabContent = ({
 
     const [windowHeight, setWindowHeight] = React.useState<number>(0);
 
-    console.log(loadMore);
-
     React.useEffect(() => {
         if (typeof window !== 'undefined') {
             setWindowHeight(window.innerHeight);
