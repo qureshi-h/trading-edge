@@ -5,25 +5,25 @@ import React from 'react';
 import TabContent from './TabContent';
 import DateTabs from '@/components/DateTabs';
 
-import { StockAnalysis } from '@/types/stocks';
+import { TopStock } from '@/types/stocks';
 import { getDatesExcludingWeekends } from '@/utils/dates';
 
 import '@/app/style.css';
 
 interface TopAnalysesProps {
     defaultStockAnalyses: {
-        [key: string]: StockAnalysis[] | null;
+        [key: string]: TopStock[] | null;
     };
 }
 
 const TopAnalyses: React.FC<TopAnalysesProps> = ({ defaultStockAnalyses }) => {
     const [cachedAnalyses, setCachedAnalyses] = React.useState<{
-        [key: string]: StockAnalysis[] | null;
+        [key: string]: TopStock[] | null;
     }>(defaultStockAnalyses);
 
     const dates = getDatesExcludingWeekends(7);
 
-    const updateCachedAnalysis = (date: string, analysis: StockAnalysis[] | null) => {
+    const updateCachedAnalysis = (date: string, analysis: TopStock[] | null) => {
         setCachedAnalyses((prevState) => ({
             ...prevState,
             [date]: analysis,

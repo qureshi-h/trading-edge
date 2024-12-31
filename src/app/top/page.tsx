@@ -5,7 +5,7 @@ import Title from 'antd/es/typography/Title';
 import TopAnalyses from './components/TopAnalyses';
 import PageContainer from '@/components/PageContainer';
 
-import { StockAnalysis } from '@/types/stocks';
+import { TopStock } from '@/types/stocks';
 import { fetchTopAnalysis } from '@/utils/analysis';
 import { getDatesExcludingWeekends } from '@/utils/dates';
 
@@ -13,7 +13,7 @@ import '@/app/style.css';
 
 const Page = async () => {
     const currentDate = getDatesExcludingWeekends(1)[0];
-    const stockAnalysis: StockAnalysis[] | null = await fetchTopAnalysis(currentDate, 0, 10);
+    const stockAnalysis: TopStock[] | null = await fetchTopAnalysis(currentDate, 0, 10);
 
     return (
         <PageContainer className="h-screen px-4 md:py-10 lg:py-0">

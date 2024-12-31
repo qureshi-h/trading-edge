@@ -1,5 +1,5 @@
 import { api } from './api';
-import { StockAnalysis } from '@/types/stocks';
+import { StockAnalysis, TopStock } from '@/types/stocks';
 
 export const fetchStockAnalysis = async (
     stockSymbol: string,
@@ -18,9 +18,9 @@ export const fetchTopAnalysis = async (
     date: string,
     offset = 0,
     limit = 20,
-): Promise<StockAnalysis[] | null> => {
+): Promise<TopStock[] | null> => {
     try {
-        const response = await api.get<StockAnalysis[]>(`/api/analysis/top`, {
+        const response = await api.get<TopStock[]>(`/api/analysis/top`, {
             date,
             offset,
             limit,

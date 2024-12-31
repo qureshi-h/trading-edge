@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Table, Spin, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 
-import { StockAnalysis } from '@/types/stocks';
+import { TopStock } from '@/types/stocks';
 import { fetchTopAnalysis } from '@/utils/analysis';
 
 const { Text } = Typography;
@@ -17,11 +17,11 @@ const TabContent = ({
     updateCachedAnalysis,
 }: {
     date: string;
-    cachedData: { [key: string]: StockAnalysis[] | null };
-    updateCachedAnalysis: (date: string, analysis: StockAnalysis[] | null) => void;
+    cachedData: { [key: string]: TopStock[] | null };
+    updateCachedAnalysis: (date: string, analysis: TopStock[] | null) => void;
 }) => {
     const router = useRouter();
-    const [stockAnalysis, setStockAnalysis] = React.useState<StockAnalysis[] | null>(
+    const [stockAnalysis, setStockAnalysis] = React.useState<TopStock[] | null>(
         cachedData[date] || null,
     );
     const [loading, setLoading] = React.useState<boolean>(cachedData[date] === undefined);
@@ -73,7 +73,7 @@ const TabContent = ({
         );
     }
 
-    const columns: ColumnsType<StockAnalysis> = [
+    const columns: ColumnsType<TopStock> = [
         {
             title: 'Stock Symbol',
             dataIndex: 'stock_symbol',
@@ -87,38 +87,55 @@ const TabContent = ({
                     {text}
                 </Text>
             ),
-        },
-        {
-            title: 'Close Price',
-            dataIndex: 'close_price',
-            key: 'close_price',
+            sorter: (a: TopStock, b: TopStock) => a.stock_symbol.localeCompare(b.stock_symbol),
+            filterMultiple: true,
+            filters: stockAnalysis
+                ? [...new Set(stockAnalysis.map((analysis) => analysis.stock_symbol))].map(
+                      (symbol) => ({
+                          text: symbol,
+                          value: symbol,
+                      }),
+                  )
+                : [],
+            onFilter: (value: any, record: TopStock) => record.stock_symbol.includes(value),
         },
         {
             title: 'Breakout %',
             dataIndex: 'breakout_percentage',
             key: 'breakout_percentage',
             render: (value) => `${value}%`,
+            sorter: (a, b) => a.breakout_percentage - b.breakout_percentage,
+        },
+        {
+            title: 'Close Price',
+            dataIndex: 'close_price',
+            key: 'close_price',
+            sorter: (a, b) => a.close_price - b.close_price,
         },
         {
             title: 'Trendline Accuracy',
             dataIndex: 'trendline_accuracy',
             key: 'trendline_accuracy',
             render: (value) => `${value}%`,
+            sorter: (a, b) => a.trendline_accuracy - b.trendline_accuracy,
         },
         {
             title: 'RSI',
             dataIndex: 'rsi_value',
             key: 'rsi_value',
+            sorter: (a, b) => a.rsi_value - b.rsi_value,
         },
         {
             title: 'MACD',
             dataIndex: 'macd_value',
             key: 'macd_value',
+            sorter: (a, b) => a.macd_value - b.macd_value,
         },
         {
             title: 'Volume',
             dataIndex: 'volume',
             key: 'volume',
+            sorter: (a, b) => a.volume - b.volume,
         },
     ];
 
