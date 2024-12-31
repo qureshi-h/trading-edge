@@ -8,6 +8,8 @@ import type { ColumnsType } from 'antd/es/table';
 
 import { TopStock } from '@/types/stocks';
 import { fetchTopAnalysis } from '@/utils/api/analysis';
+import { getColorClassFromRange } from '@/utils/colour';
+import { analysisRanges } from '@/utils/constants';
 
 const { Text } = Typography;
 
@@ -122,7 +124,18 @@ const TabContent = ({
             title: 'Breakout %',
             dataIndex: 'breakout_percentage',
             key: 'breakout_percentage',
-            render: (value) => `${value}%`,
+
+            render: (value) => (
+                <Text
+                    className={getColorClassFromRange(
+                        value,
+                        analysisRanges.breakout_percentage.low,
+                        analysisRanges.breakout_percentage.high,
+                    )}
+                >
+                    {value}%
+                </Text>
+            ),
             sorter: (a, b) => a.breakout_percentage - b.breakout_percentage,
         },
         {
@@ -135,7 +148,18 @@ const TabContent = ({
             title: 'Trendline Accuracy',
             dataIndex: 'trendline_accuracy',
             key: 'trendline_accuracy',
-            render: (value) => `${value}%`,
+
+            render: (value) => (
+                <Text
+                    className={getColorClassFromRange(
+                        value,
+                        analysisRanges.trendline_accuracy.low,
+                        analysisRanges.trendline_accuracy.high,
+                    )}
+                >
+                    {value}%
+                </Text>
+            ),
             sorter: (a, b) => a.trendline_accuracy - b.trendline_accuracy,
         },
         {
@@ -143,18 +167,52 @@ const TabContent = ({
             dataIndex: 'rsi_value',
             key: 'rsi_value',
             sorter: (a, b) => a.rsi_value - b.rsi_value,
+            render: (value) => (
+                <Text
+                    className={getColorClassFromRange(
+                        value,
+                        analysisRanges.rsi.low,
+                        analysisRanges.rsi.high,
+                        true,
+                    )}
+                >
+                    {value}
+                </Text>
+            ),
         },
         {
             title: 'MACD',
             dataIndex: 'macd_value',
             key: 'macd_value',
             sorter: (a, b) => a.macd_value - b.macd_value,
+            render: (value) => (
+                <Text
+                    className={getColorClassFromRange(
+                        value,
+                        analysisRanges.macd.low,
+                        analysisRanges.macd.high,
+                    )}
+                >
+                    {value}
+                </Text>
+            ),
         },
         {
-            title: 'Volume',
-            dataIndex: 'volume',
+            title: 'Volume Ratio',
+            dataIndex: 'volume_ratio',
             key: 'volume',
             sorter: (a, b) => a.volume - b.volume,
+            render: (value) => (
+                <Text
+                    className={getColorClassFromRange(
+                        value,
+                        analysisRanges.volume_ratio.low,
+                        analysisRanges.volume_ratio.high,
+                    )}
+                >
+                    {value}
+                </Text>
+            ),
         },
     ];
 

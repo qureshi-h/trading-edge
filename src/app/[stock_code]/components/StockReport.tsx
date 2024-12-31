@@ -11,6 +11,7 @@ import { getColorClassFromRange } from '@/utils/colour';
 import { getDatesExcludingWeekends } from '@/utils/dates';
 
 import '@/app/style.css';
+import { analysisRanges } from '@/utils/constants';
 
 // Lazy load the content for each tab
 const TabContent = ({
@@ -87,8 +88,8 @@ const TabContent = ({
                                 <Text
                                     className={getColorClassFromRange(
                                         stockAnalysis.breakout_percentage,
-                                        -20,
-                                        20,
+                                        analysisRanges.breakout_percentage.low,
+                                        analysisRanges.breakout_percentage.high,
                                     )}
                                 >
                                     {stockAnalysis.breakout_percentage}%
@@ -197,7 +198,15 @@ const TabContent = ({
                     </Text>
                     <Text>
                         <strong>Volume Ratio: </strong>
-                        {stockAnalysis.volume_ratio}
+                        <Text
+                            className={getColorClassFromRange(
+                                stockAnalysis.volume_ratio,
+                                analysisRanges.volume_ratio.low,
+                                analysisRanges.volume_ratio.high,
+                            )}
+                        >
+                            {stockAnalysis.volume_ratio}
+                        </Text>
                     </Text>
                     <Text>
                         <strong>9 EMA: </strong>
