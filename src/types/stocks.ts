@@ -36,4 +36,5 @@ export interface StockAnalysis {
 
 export interface TopStock extends StockAnalysis {
     stock_symbol: string;
+    stock_name: string;
 }

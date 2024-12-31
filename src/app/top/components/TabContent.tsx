@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import React from 'react';
 
-import { Flex } from 'antd';
+import { Flex, Popover } from 'antd';
 import { useRouter } from 'next/navigation';
 import { Table, Spin, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
@@ -11,7 +11,11 @@ import { fetchTopAnalysis } from '@/utils/api/analysis';
 import { getColorClassFromRange } from '@/utils/colour';
 import { analysisRanges } from '@/utils/constants';
 
+import '@/app/style.css';
+
 const { Text } = Typography;
+
+const PAGE_SIZE = 10;
 
 const TabContent = ({
     date,
@@ -52,7 +56,7 @@ const TabContent = ({
         if (cachedData[date] === undefined) {
             const loadStockAnalysis = async () => {
                 setLoading(true);
-                const response = await fetchTopAnalysis(date, 1, 10);
+                const response = await fetchTopAnalysis(date, 1, PAGE_SIZE);
                 setStockAnalysis(response?.rows ?? []);
                 updateCachedAnalysis(date, response?.rows ?? []);
                 setLoadMore(!(response?.finalPage ?? true));
@@ -65,14 +69,16 @@ const TabContent = ({
 
     const handleLoadMore = async () => {
         if (stockAnalysis && loadMore) {
-            fetchTopAnalysis(date, stockAnalysis?.length / 10 + 1, 10).then((response) => {
-                if (response !== null) {
-                    const newState = [...stockAnalysis, ...response.rows];
-                    setStockAnalysis(newState);
-                    updateCachedAnalysis(date, newState);
-                    setLoadMore(!(response?.finalPage ?? true));
-                }
-            });
+            fetchTopAnalysis(date, stockAnalysis?.length / PAGE_SIZE + 1, PAGE_SIZE)
+                .then((response) => {
+                    if (response !== null) {
+                        const newState = [...stockAnalysis, ...response.rows];
+                        setStockAnalysis(newState);
+                        updateCachedAnalysis(date, newState);
+                        setLoadMore(!(response?.finalPage ?? true));
+                    }
+                })
+                .catch((error) => console.error(error));
         }
     };
 
@@ -100,13 +106,17 @@ const TabContent = ({
             dataIndex: 'stock_symbol',
             key: 'stock_symbol',
             fixed: 'left',
-            render: (text) => (
-                <Text
-                    className="!text-black hover:!text-blue-600 cursor-pointer"
-                    onClick={() => router.push('/' + text)}
+            render: (text: string, record: TopStock) => (
+                <Popover
+                    content={
+                        <Flex>
+                            <Text className="!text-black">{record.stock_name}</Text>
+                        </Flex>
+                    }
+                    trigger="hover"
                 >
-                    {text}
-                </Text>
+                    <Text className="!text-black hover:!text-blue-600 cursor-pointer">{text}</Text>
+                </Popover>
             ),
             sorter: (a: TopStock, b: TopStock) => a.stock_symbol.localeCompare(b.stock_symbol),
             filterMultiple: true,
