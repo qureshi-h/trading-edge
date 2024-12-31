@@ -115,7 +115,12 @@ const TabContent = ({
                     }
                     trigger="hover"
                 >
-                    <Text className="!text-black hover:!text-blue-600 cursor-pointer">{text}</Text>
+                    <Text
+                        className="!text-black hover:!text-blue-600 cursor-pointer"
+                        onClick={() => router.push('/' + text)}
+                    >
+                        {text}
+                    </Text>
                 </Popover>
             ),
             sorter: (a: TopStock, b: TopStock) => a.stock_symbol.localeCompare(b.stock_symbol),
