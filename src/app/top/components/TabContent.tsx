@@ -35,6 +35,7 @@ const TabContent = ({
     const [loading, setLoading] = React.useState<boolean>(cachedData[date] === undefined);
     const [loadMore, setLoadMore] = React.useState<boolean>(!finalPage);
 
+    const [expandedRows, setExpandedRows] = React.useState<number[]>([]);
     const [windowHeight, setWindowHeight] = React.useState<number>(0);
 
     React.useEffect(() => {
@@ -107,21 +108,42 @@ const TabContent = ({
             key: 'stock_symbol',
             fixed: 'left',
             render: (text: string, record: TopStock) => (
-                <Popover
-                    content={
-                        <Flex>
-                            <Text className="!text-black">{record.stock_name}</Text>
-                        </Flex>
-                    }
-                    trigger="hover"
-                >
-                    <Text
-                        className="!text-black hover:!text-blue-600 cursor-pointer"
-                        onClick={() => router.push('/' + text)}
+                <Flex gap={5}>
+                    {expandedRows.includes(record.analysis_id) ? (
+                        <Text
+                            className="!text-orange-400 cursor-pointer px-3"
+                            onClick={() =>
+                                setExpandedRows((prev) =>
+                                    prev.filter((id) => id !== record.analysis_id),
+                                )
+                            }
+                        >
+                            -
+                        </Text>
+                    ) : (
+                        <Text
+                            className="!text-orange-400 cursor-pointer px-3"
+                            onClick={() => setExpandedRows((prev) => [...prev, record.analysis_id])}
+                        >
+                            +
+                        </Text>
+                    )}
+                    <Popover
+                        content={
+                            <Flex>
+                                <Text className="!text-gray-500">{record.stock_name}</Text>
+                            </Flex>
+                        }
+                        trigger="hover"
                     >
-                        {text}
-                    </Text>
-                </Popover>
+                        <Text
+                            className="!text-white hover:!text-blue-600 cursor-pointer"
+                            onClick={() => router.push('/' + text)}
+                        >
+                            {text}
+                        </Text>
+                    </Popover>
+                </Flex>
             ),
             sorter: (a: TopStock, b: TopStock) => a.stock_symbol.localeCompare(b.stock_symbol),
             filterMultiple: true,
@@ -233,16 +255,62 @@ const TabContent = ({
 
     return (
         <Table
+            className="w-full"
             dataSource={stockAnalysis}
             columns={columns}
+            expandable={{
+                expandedRowRender: (record) => (
+                    <Flex justify="center" className="bg-gray-950/20 p-5">
+                        <Flex
+                            justify="space-around"
+                            wrap={true}
+                            gap={10}
+                            className="inherit-font-color !text-white w-full md:w-1/2 z-20 whitespace-nowrap "
+                        >
+                            <Flex>
+                                <Text>
+                                    <strong>Volume: </strong>
+                                    {record.volume}
+                                </Text>
+                            </Flex>
+                            <Flex>
+                                <Text>
+                                    <strong>9EMA: </strong>
+                                    {record.nine_ema}
+                                </Text>
+                            </Flex>
+                            <Flex>
+                                <Text>
+                                    <strong>12EMA: </strong>
+                                    {record.twelve_ema}
+                                </Text>
+                            </Flex>
+                            <Flex>
+                                <Text>
+                                    <strong>21EMA: </strong>
+                                    {record.twenty_one_ema}
+                                </Text>
+                            </Flex>
+                            <Flex>
+                                <Text>
+                                    <strong>50EMA: </strong>
+                                    {record.fifty_ema}
+                                </Text>
+                            </Flex>
+                        </Flex>
+                    </Flex>
+                ),
+                expandIconColumnIndex: -1,
+                expandedRowKeys: expandedRows,
+                expandIcon: () => <></>,
+            }}
             pagination={false}
             scroll={{
-                x: 1000,
-                y: windowHeight > 910 ? 600 : 400,
+                x: 800,
+                y: windowHeight > 910 ? 500 : 300,
             }}
             rowKey="analysis_id"
             virtual={true}
-            className="w-full"
             footer={() => (
                 <Flex
                     justify="right"

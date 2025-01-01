@@ -42,7 +42,7 @@ const TopAnalyses: React.FC<TopAnalysesProps> = ({ finalPage, defaultStockAnalys
                     updateCachedAnalysis={updateCachedAnalysis}
                 />
             )}
-            className="custom-tabs mx-3 sm:mx-2"
+            className="custom-tabs mx-3 sm:mx-2 py-3 px-5"
         />
     );
 };

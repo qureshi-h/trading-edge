@@ -65,7 +65,7 @@ const TabContent = ({
     return (
         <Row
             style={{ boxShadow: '0 0 10px rgba(194, 200, 209, 0.2)' }}
-            className="stock-report !h-full items-stretch"
+            className="-size !h-full items-stretch"
             align="top"
         >
             {/* Panel 1 */}
