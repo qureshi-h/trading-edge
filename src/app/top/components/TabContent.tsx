@@ -103,7 +103,7 @@ const TabContent = ({
 
     const columns: ColumnsType<TopStock> = [
         {
-            title: 'Stock Symbol',
+            title: 'Stock',
             dataIndex: 'stock_symbol',
             key: 'stock_symbol',
             fixed: 'left',
@@ -148,14 +148,12 @@ const TabContent = ({
             sorter: (a: TopStock, b: TopStock) => a.stock_symbol.localeCompare(b.stock_symbol),
             filterMultiple: true,
             filters: stockAnalysis
-                ? [...new Set(stockAnalysis.map((analysis) => analysis.stock_symbol))].map(
-                      (symbol) => ({
-                          text: symbol,
-                          value: symbol,
-                      }),
-                  )
+                ? stockAnalysis.map((analysis) => ({
+                      text: analysis.stock_symbol,
+                      value: analysis.analysis_id,
+                  }))
                 : [],
-            onFilter: (value, record) => record.stock_symbol.includes(value.toString()),
+            onFilter: (value, record) => value === record.analysis_id
         },
         {
             title: 'Breakout %',
@@ -182,7 +180,7 @@ const TabContent = ({
             sorter: (a, b) => a.close_price - b.close_price,
         },
         {
-            title: 'Trendline Accuracy',
+            title: 'Reliability',
             dataIndex: 'trendline_accuracy',
             key: 'trendline_accuracy',
 
@@ -313,15 +311,14 @@ const TabContent = ({
             virtual={true}
             footer={() => (
                 <Flex
-                    justify="right"
+                    justify="space-between"
                     className={`${
                         loadMore ? '!text-blue-400 cursor-pointer' : '!text-gray-500 cursor-auto'
                     } `}
                     onClick={handleLoadMore}
                 >
-                    <Text className="!text-inherit !text-right w-full cursor-pointer">
-                        Load More
-                    </Text>
+                    <Text className="!text-gray-200">Displaying {stockAnalysis.length} rows</Text>
+                    <Text className="!text-inherit !text-right cursor-pointer">Load More</Text>
                 </Flex>
             )}
         />
