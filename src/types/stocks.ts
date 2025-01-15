@@ -32,6 +32,7 @@ export interface StockAnalysis {
     twelve_ema: number;
     twenty_one_ema: number;
     fifty_ema: number;
+    image: string;
 }
 
 export interface TopStock extends StockAnalysis {

@@ -16,9 +16,19 @@ const Page = async ({ params }: { params: Promise<{ stock_code: string }> }) => 
     const currentDate = getDatesExcludingWeekends(1)[0];
     const stockAnalysis: StockAnalysis | null = await fetchStockAnalysis(stock_code, currentDate);
 
+    console.log(stockAnalysis);
+
     return (
         <PageContainer>
-            <Col className="backdrop-blur-3xl rounded-sm p-2" xs={24} sm={24} md={16} lg={16}>
+            <Col
+                className="backdrop-blur-3xl rounded-sm p-2"
+                span={12}
+                xs={24}
+                sm={24}
+                md={16}
+                lg={14}
+                xl={10}
+            >
                 <StockInfo stockInfo={stockInfo} />
                 <StockReport
                     stockCode={stock_code}
