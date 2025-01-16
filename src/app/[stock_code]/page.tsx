@@ -19,7 +19,7 @@ const Page = async ({ params }: { params: Promise<{ stock_code: string }> }) => 
     return (
         <PageContainer>
             <Col
-                className="backdrop-blur-3xl rounded-sm p-2"
+                className="backdrop-blur-3xl rounded-xl p-5"
                 span={12}
                 xs={24}
                 sm={24}
