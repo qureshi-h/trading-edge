@@ -6,10 +6,11 @@ import { useRouter } from 'next/navigation';
 import { Table, Spin, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 
-import { TopStock } from '@/types/stocks';
+import { Sector } from '@/types/general';
+import { analysisRanges } from '@/utils/constants';
 import { fetchTopAnalysis } from '@/utils/api/analysis';
 import { getColorClassFromRange } from '@/utils/colour';
-import { analysisRanges } from '@/utils/constants';
+import { CachedAnalyses, TopStock } from '@/types/stocks';
 
 import '@/app/style.css';
 
@@ -19,18 +20,20 @@ const PAGE_SIZE = 10;
 
 const TabContent = ({
     date,
+    sectorFilter,
     finalPage,
     cachedData,
     updateCachedAnalysis,
 }: {
     date: string;
+    sectorFilter: Sector;
     finalPage: boolean;
-    cachedData: { [key: string]: TopStock[] | null };
+    cachedData: CachedAnalyses;
     updateCachedAnalysis: (date: string, analysis: TopStock[] | null) => void;
 }) => {
     const router = useRouter();
     const [stockAnalysis, setStockAnalysis] = React.useState<TopStock[] | null>(
-        cachedData[date] || null,
+        cachedData[date][sectorFilter] || null,
     );
     const [loading, setLoading] = React.useState<boolean>(cachedData[date] === undefined);
     const [loadMore, setLoadMore] = React.useState<boolean>(!finalPage);
@@ -54,10 +57,10 @@ const TabContent = ({
     }, []);
 
     React.useEffect(() => {
-        if (cachedData[date] === undefined) {
+        if (cachedData[date][sectorFilter] === undefined) {
             const loadStockAnalysis = async () => {
                 setLoading(true);
-                const response = await fetchTopAnalysis(date, 1, PAGE_SIZE);
+                const response = await fetchTopAnalysis(date, 1, PAGE_SIZE, sectorFilter);
                 setStockAnalysis(response?.rows ?? []);
                 updateCachedAnalysis(date, response?.rows ?? []);
                 setLoadMore(!(response?.finalPage ?? true));
@@ -153,7 +156,7 @@ const TabContent = ({
                       value: analysis.analysis_id,
                   }))
                 : [],
-            onFilter: (value, record) => value === record.analysis_id
+            onFilter: (value, record) => value === record.analysis_id,
         },
         {
             title: 'Breakout %',

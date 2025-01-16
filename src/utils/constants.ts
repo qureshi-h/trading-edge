@@ -32,3 +32,18 @@ export const analysisRanges = {
         high: 1.2,
     },
 };
+
+export const sectorOptions = [
+    'All',
+    'Basic Materials',
+    'Communication Services',
+    'Consumer Cyclical',
+    'Consumer Defensive',
+    'Energy',
+    'Financial Services',
+    'Healthcare',
+    'Industrials',
+    'Real Estate',
+    'Technology',
+    'Utilities',
+] as const;

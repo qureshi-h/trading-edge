@@ -1,3 +1,5 @@
+import { Sector } from './general';
+
 export interface Stock {
     exchange: string;
     sector: string;
@@ -38,4 +40,11 @@ export interface StockAnalysis {
 export interface TopStock extends StockAnalysis {
     stock_symbol: string;
     stock_name: string;
+    sector: string;
 }
+
+export type CachedAnalyses = {
+    [key: string]: {
+        [key in Sector]?: TopStock[] | null | undefined;
+    };
+};

@@ -28,7 +28,9 @@ const Page = async () => {
                 <Title className="!text-white w-full !text-center">Top Picks</Title>
                 <TopAnalyses
                     finalPage={stockAnalysis?.finalPage ?? true}
-                    defaultStockAnalyses={{ [currentDate]: stockAnalysis?.rows ?? null }}
+                    defaultStockAnalyses={{
+                        [currentDate]: { All: stockAnalysis?.rows ?? null },
+                    }}
                 />
             </Flex>
         </PageContainer>
