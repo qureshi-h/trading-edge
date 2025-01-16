@@ -16,8 +16,6 @@ const Page = async ({ params }: { params: Promise<{ stock_code: string }> }) => 
     const currentDate = getDatesExcludingWeekends(1)[0];
     const stockAnalysis: StockAnalysis | null = await fetchStockAnalysis(stock_code, currentDate);
 
-    console.log(stockAnalysis);
-
     return (
         <PageContainer>
             <Col
@@ -29,7 +27,7 @@ const Page = async ({ params }: { params: Promise<{ stock_code: string }> }) => 
                 lg={14}
                 xl={10}
             >
-                <StockInfo stockInfo={stockInfo} />
+                <StockInfo stockInfo={stockInfo} plotImage={stockAnalysis?.image ?? null} />
                 <StockReport
                     stockCode={stock_code}
                     defaultStockAnalyses={{ [currentDate]: stockAnalysis }}

@@ -9,9 +9,10 @@ import { API_URL } from '@/utils/api/api';
 
 interface StockInfoProps {
     stockInfo: Stock | null;
+    plotImage: string | null;
 }
 
-const StockInfo: React.FC<StockInfoProps> = ({ stockInfo }) => {
+const StockInfo: React.FC<StockInfoProps> = ({ stockInfo, plotImage }) => {
     return (
         <Flex vertical justify="center">
             {stockInfo ? (
@@ -50,7 +51,7 @@ const StockInfo: React.FC<StockInfoProps> = ({ stockInfo }) => {
                         xl={{ span: 8, offset: 0 }}
                     >
                         <Image
-                            src={`${API_URL}/plot/${'0b2d46b7-0fc8-489e-9a17-c97c759d96e3.png'}`}
+                            src={`${API_URL}/plot/${plotImage}`}
                             alt={'Plot Not Found!'}
                             width={'100%'}
                             className="p-5"
