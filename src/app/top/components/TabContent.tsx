@@ -33,9 +33,11 @@ const TabContent = ({
 }) => {
     const router = useRouter();
     const [stockAnalysis, setStockAnalysis] = React.useState<TopStock[] | null>(
-        cachedData[date][sectorFilter] || null,
+        cachedData[date] ? cachedData[date][sectorFilter] ?? null : null,
     );
-    const [loading, setLoading] = React.useState<boolean>(cachedData[date] === undefined);
+    const [loading, setLoading] = React.useState<boolean>(
+        cachedData[date] === undefined || cachedData[date][sectorFilter] === undefined,
+    );
     const [loadMore, setLoadMore] = React.useState<boolean>(!finalPage);
 
     const [expandedRows, setExpandedRows] = React.useState<number[]>([]);
@@ -57,7 +59,7 @@ const TabContent = ({
     }, []);
 
     React.useEffect(() => {
-        if (cachedData[date][sectorFilter] === undefined) {
+        if (cachedData[date] === undefined || cachedData[date][sectorFilter] === undefined) {
             const loadStockAnalysis = async () => {
                 setLoading(true);
                 const response = await fetchTopAnalysis(date, 1, PAGE_SIZE, sectorFilter);
@@ -73,7 +75,7 @@ const TabContent = ({
 
     const handleLoadMore = async () => {
         if (stockAnalysis && loadMore) {
-            fetchTopAnalysis(date, stockAnalysis?.length / PAGE_SIZE + 1, PAGE_SIZE)
+            fetchTopAnalysis(date, stockAnalysis?.length / PAGE_SIZE + 1, PAGE_SIZE, sectorFilter)
                 .then((response) => {
                     if (response !== null) {
                         const newState = [...stockAnalysis, ...response.rows];
