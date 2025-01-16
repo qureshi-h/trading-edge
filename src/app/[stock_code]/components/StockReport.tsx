@@ -3,7 +3,7 @@
 import dayjs from 'dayjs';
 import React, { Suspense } from 'react';
 import Text from 'antd/es/typography/Text';
-import { Tabs, Spin, Flex, Row, Col } from 'antd';
+import { Tabs, Spin, Flex, Row, Col, Tooltip } from 'antd';
 
 import { StockAnalysis } from '@/types/stocks';
 import { fetchStockAnalysis } from '@/utils/api/analysis';
@@ -12,6 +12,7 @@ import { getDatesExcludingWeekends } from '@/utils/dates';
 
 import '@/app/style.css';
 import { analysisRanges } from '@/utils/constants';
+import { InfoCircleOutlined } from '@ant-design/icons';
 
 // Lazy load the content for each tab
 const TabContent = ({
@@ -92,8 +93,11 @@ const TabContent = ({
                                         analysisRanges.breakout_percentage.high,
                                     )}
                                 >
-                                    {stockAnalysis.breakout_percentage}%
+                                    {stockAnalysis.breakout_percentage}%{' '}
                                 </Text>
+                                <Tooltip title="The breakout percentage measures how much the current closing price exceeds the trendline value. A higher value indicates a stronger bullish breakout.">
+                                    <InfoCircleOutlined />{' '}
+                                </Tooltip>
                             </Text>
                             <Text>
                                 <strong>Consecutive Days Above Trendline: </strong>
@@ -108,8 +112,11 @@ const TabContent = ({
                                             : 'text-gray-500'
                                     }
                                 >
-                                    {stockAnalysis.consecutive_days_above_trendline}
+                                    {stockAnalysis.consecutive_days_above_trendline}{' '}
                                 </Text>
+                                <Tooltip title="Consecutive days above the trendline represent the number of trading days the stock's closing price has remained above the trendline without interruption. It indicates sustained bullish momentum.">
+                                    <InfoCircleOutlined />{' '}
+                                </Tooltip>
                             </Text>
                             <Text>
                                 <strong>Trendline Accuracy: </strong>
@@ -120,8 +127,11 @@ const TabContent = ({
                                         100,
                                     )}
                                 >
-                                    {stockAnalysis.trendline_accuracy}%
+                                    {stockAnalysis.trendline_accuracy}%{' '}
                                 </Text>
+                                <Tooltip title="Trendline reliability measures how accurately the trendline represents the stock's peaks, expressed as a percentage. Higher reliability indicates a better fit.">
+                                    <InfoCircleOutlined />{' '}
+                                </Tooltip>
                             </Text>
                         </>
                     ) : (
