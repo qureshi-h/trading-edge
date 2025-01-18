@@ -20,20 +20,23 @@ export const fetchTopAnalysis = async (
     page = 0,
     size = 20,
     sectorFilter: string = 'All',
-): Promise<{ rows: TopStock[]; finalPage: boolean } | null> => {
+): Promise<TopAnalysisResponse> => {
     try {
         const params: GenericObject = { date, page, size };
         if (sectorFilter !== 'All') {
             params.sector = sectorFilter;
         }
 
-        const response = await api.get<{ rows: TopStock[]; finalPage: boolean }>(
-            `/api/analysis/top`,
-            params,
-        );
-        return response.status === 200 ? response.data : null;
+        const response = await api.get<TopAnalysisResponse>(`/api/analysis/top`, params);
+        return response.status === 200 ? response.data : { rows: [], finalPage: true, page: 0 };
     } catch (err) {
         console.error('Error fetching stock analysis:', err);
-        return null;
+        return { rows: [], finalPage: true, page: 0 };
     }
 };
+
+export interface TopAnalysisResponse {
+    rows: TopStock[];
+    page: number;
+    finalPage: boolean;
+}

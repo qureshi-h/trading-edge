@@ -6,31 +6,18 @@ import { Flex, Select } from 'antd';
 import TabContent from './TabContent';
 import DateTabs from '@/components/DateTabs';
 
-import { CachedAnalyses, TopStock } from '@/types/stocks';
 import { sectorOptions } from '@/utils/constants';
 import { getDatesExcludingWeekends } from '@/utils/dates';
 
-import '@/app/style.css';
 import { Sector } from '@/types/general';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const { Option } = Select;
 
-interface TopAnalysesProps {
-    finalPage: boolean;
-    defaultStockAnalyses: CachedAnalyses;
-}
+const queryClient = new QueryClient();
 
-const TopAnalyses: React.FC<TopAnalysesProps> = ({ finalPage, defaultStockAnalyses }) => {
+const TopAnalyses = () => {
     const [sectorFilter, setSectorFilter] = React.useState<Sector>('All');
-    const [cachedAnalyses, setCachedAnalyses] =
-        React.useState<CachedAnalyses>(defaultStockAnalyses);
-
-    const updateCachedAnalysis = (date: string, analysis: TopStock[] | null) => {
-        setCachedAnalyses((prevState) => ({
-            ...prevState,
-            [date]: { [sectorFilter]: analysis },
-        }));
-    };
 
     const handleSectorChange = async (value: Sector | null) => {
         if (value === null) {
@@ -59,19 +46,15 @@ const TopAnalyses: React.FC<TopAnalysesProps> = ({ finalPage, defaultStockAnalys
                     ))}
                 </Select>
             </Flex>
-            <DateTabs
-                dates={dates}
-                renderContent={(date: string) => (
-                    <TabContent
-                        finalPage={finalPage}
-                        date={date}
-                        cachedData={cachedAnalyses}
-                        updateCachedAnalysis={updateCachedAnalysis}
-                        sectorFilter={sectorFilter}
-                    />
-                )}
-                className="custom-tabs mx-3 sm:mx-2 py-3 px-5 flex-1"
-            />
+            <QueryClientProvider client={queryClient}>
+                <DateTabs
+                    dates={dates}
+                    renderContent={(date: string) => (
+                        <TabContent date={date} sectorFilter={sectorFilter} />
+                    )}
+                    className="custom-tabs mx-3 sm:mx-2 py-3 px-5 flex-1"
+                />
+            </QueryClientProvider>
         </Flex>
     );
 };

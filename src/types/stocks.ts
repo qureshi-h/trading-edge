@@ -42,9 +42,3 @@ export interface TopStock extends StockAnalysis {
     stock_name: string;
     sector: string;
 }
-
-export type CachedAnalyses = {
-    [key: string]: {
-        [key in Sector]?: TopStock[] | null | undefined;
-    };
-};

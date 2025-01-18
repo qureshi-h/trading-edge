@@ -1,16 +1,17 @@
 import dayjs from 'dayjs';
 import React from 'react';
 
-import { Flex, Popover } from 'antd';
+import { Table } from 'antd';
 import { useRouter } from 'next/navigation';
-import { Table, Spin, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import { Flex, Popover, Spin, Typography } from 'antd';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { Sector } from '@/types/general';
 import { analysisRanges } from '@/utils/constants';
-import { fetchTopAnalysis } from '@/utils/api/analysis';
+import { fetchTopAnalysis, TopAnalysisResponse } from '@/utils/api/analysis';
 import { getColorClassFromRange } from '@/utils/colour';
-import { CachedAnalyses, TopStock } from '@/types/stocks';
+import { TopStock } from '@/types/stocks';
 
 import '@/app/style.css';
 
@@ -18,28 +19,8 @@ const { Text } = Typography;
 
 const PAGE_SIZE = 10;
 
-const TabContent = ({
-    date,
-    sectorFilter,
-    finalPage,
-    cachedData,
-    updateCachedAnalysis,
-}: {
-    date: string;
-    sectorFilter: Sector;
-    finalPage: boolean;
-    cachedData: CachedAnalyses;
-    updateCachedAnalysis: (date: string, analysis: TopStock[] | null) => void;
-}) => {
+const TabContent = ({ date, sectorFilter }: { date: string; sectorFilter: Sector }) => {
     const router = useRouter();
-    const [stockAnalysis, setStockAnalysis] = React.useState<TopStock[] | null>(
-        cachedData[date] ? cachedData[date][sectorFilter] ?? null : null,
-    );
-    const [loading, setLoading] = React.useState<boolean>(
-        cachedData[date] === undefined || cachedData[date][sectorFilter] === undefined,
-    );
-    const [loadMore, setLoadMore] = React.useState<boolean>(!finalPage);
-
     const [expandedRows, setExpandedRows] = React.useState<number[]>([]);
     const [windowHeight, setWindowHeight] = React.useState<number>(0);
 
@@ -58,37 +39,37 @@ const TabContent = ({
         }
     }, []);
 
-    React.useEffect(() => {
-        if (cachedData[date] === undefined || cachedData[date][sectorFilter] === undefined) {
-            const loadStockAnalysis = async () => {
-                setLoading(true);
-                const response = await fetchTopAnalysis(date, 1, PAGE_SIZE, sectorFilter);
-                setStockAnalysis(response?.rows ?? []);
-                updateCachedAnalysis(date, response?.rows ?? []);
-                setLoadMore(!(response?.finalPage ?? true));
-                setLoading(false);
-            };
+    const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+        useInfiniteQuery<TopAnalysisResponse>({
+            queryKey: ['topAnalysis', date, sectorFilter],
+            queryFn: async ({ pageParam = 1 }) => {
+                const response = await fetchTopAnalysis(
+                    date,
+                    pageParam as number,
+                    PAGE_SIZE,
+                    sectorFilter,
+                );
+                return response;
+            },
+            getNextPageParam: (lastPage): number | undefined => {
+                console.log(lastPage);
 
-            loadStockAnalysis();
-        }
-    }, [date, cachedData, updateCachedAnalysis]);
+                return lastPage?.finalPage ? undefined : lastPage?.page + 1;
+            },
+            refetchOnWindowFocus: false,
+            staleTime: 1000 * 60 * 5,
+            initialPageParam: 1,
+        });
+
+    const stockAnalysis = data?.pages.flatMap((page) => page.rows);
 
     const handleLoadMore = async () => {
-        if (stockAnalysis && loadMore) {
-            fetchTopAnalysis(date, stockAnalysis?.length / PAGE_SIZE + 1, PAGE_SIZE, sectorFilter)
-                .then((response) => {
-                    if (response !== null) {
-                        const newState = [...stockAnalysis, ...response.rows];
-                        setStockAnalysis(newState);
-                        updateCachedAnalysis(date, newState);
-                        setLoadMore(!(response?.finalPage ?? true));
-                    }
-                })
-                .catch((error) => console.error(error));
+        if (hasNextPage) {
+            fetchNextPage();
         }
     };
 
-    if (loading) {
+    if (isFetchingNextPage) {
         return (
             <Flex align="center">
                 <Spin className="w-full" />
@@ -164,7 +145,6 @@ const TabContent = ({
             title: 'Breakout %',
             dataIndex: 'breakout_percentage',
             key: 'breakout_percentage',
-
             render: (value) => (
                 <Text
                     className={getColorClassFromRange(
@@ -188,7 +168,6 @@ const TabContent = ({
             title: 'Reliability',
             dataIndex: 'trendline_accuracy',
             key: 'trendline_accuracy',
-
             render: (value) => (
                 <Text
                     className={getColorClassFromRange(
@@ -318,7 +297,9 @@ const TabContent = ({
                 <Flex
                     justify="space-between"
                     className={`${
-                        loadMore ? '!text-blue-400 cursor-pointer' : '!text-gray-500 cursor-auto'
+                        hasNextPage
+                            ? '!text-blue-400 cursor-pointer'
+                            : '!text-gray-500 cursor-default'
                     } `}
                     onClick={handleLoadMore}
                 >
