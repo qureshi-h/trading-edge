@@ -135,7 +135,7 @@ const TabContent = ({
                             </Text>
                         </>
                     ) : (
-                        <Text className="!my-2 !text-gray-400f">Breakout data unavailable</Text>
+                        <Text className="!my-2 !text-gray-300">Breakout data unavailable</Text>
                     )}
                 </Flex>
             </Col>
@@ -225,6 +225,7 @@ const TabContent = ({
                                 stockAnalysis.nine_ema,
                                 stockAnalysis.close_price * 0.8,
                                 stockAnalysis.close_price * 1.2,
+                                true,
                             )}
                         >
                             {stockAnalysis.nine_ema}
@@ -237,6 +238,7 @@ const TabContent = ({
                                 stockAnalysis.twelve_ema,
                                 stockAnalysis.close_price * 0.8,
                                 stockAnalysis.close_price * 1.2,
+                                true,
                             )}
                         >
                             {stockAnalysis.twelve_ema}
@@ -249,6 +251,7 @@ const TabContent = ({
                                 stockAnalysis.twenty_one_ema,
                                 stockAnalysis.close_price * 0.8,
                                 stockAnalysis.close_price * 1.2,
+                                true,
                             )}
                         >
                             {stockAnalysis.twenty_one_ema}
@@ -261,6 +264,7 @@ const TabContent = ({
                                 stockAnalysis.fifty_ema,
                                 stockAnalysis.close_price * 0.8,
                                 stockAnalysis.close_price * 1.2,
+                                true,
                             )}
                         >
                             {stockAnalysis.fifty_ema}
