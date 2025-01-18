@@ -51,10 +51,14 @@ const StockInfo: React.FC<StockInfoProps> = ({ stockInfo, plotImage }) => {
                         xl={{ span: 8, offset: 0 }}
                     >
                         <Image
-                            src={`${API_URL}/plot/${plotImage}`}
+                            // src={`${API_URL}/plot/${plotImage}`}
+                            src={`${API_URL}/plot/aa4c773a-be4a-4f60-aa31-9f961a3af90d.png`}
                             alt={'Plot Not Found!'}
                             width={'100%'}
-                            className="p-5"
+                            className="p-5 backdrop-blur-3xl rounded-sm bg-black/30"
+                            preview={{
+                                className: 'p-5 backdrop-blur-3xl rounded-sm bg-black/30',
+                            }}
                         />
                     </Col>
                 </Row>
