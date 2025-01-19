@@ -14,7 +14,7 @@ interface StockInfoProps {
 
 const StockInfo: React.FC<StockInfoProps> = ({ stockInfo, plotImage }) => {
     return (
-        <Flex vertical justify="center">
+        <Flex vertical justify="center" className="mx-2 lg:mx-3">
             {stockInfo ? (
                 <Row align="middle">
                     <Col
@@ -54,9 +54,9 @@ const StockInfo: React.FC<StockInfoProps> = ({ stockInfo, plotImage }) => {
                             src={`${API_URL}/plot/${plotImage}`}
                             alt={'Plot Not Found!'}
                             width={'100%'}
-                            className="p-5 backdrop-blur-3xl rounded-sm bg-black/30"
+                            className="p-5 backdrop-blur-3xl rounded-xl bg-black/30"
                             preview={{
-                                className: 'p-5 backdrop-blur-3xl rounded-sm bg-black/30',
+                                className: 'p-5 backdrop-blur-3xl bg-black/30',
                             }}
                         />
                     </Col>

@@ -317,7 +317,7 @@ const StockReport = ({ defaultStockAnalyses, stockCode }: StockReportProps) => {
             defaultActiveKey="today"
             tabPosition="top"
             items={tabItems}
-            className="custom-tabs mx-3 sm:mx-2"
+            className="custom-tabs mx-2 lg:mx-3"
         />
     );
 };
