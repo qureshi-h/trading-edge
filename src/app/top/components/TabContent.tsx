@@ -19,7 +19,7 @@ const { Text } = Typography;
 
 const PAGE_SIZE = 10;
 
-const TabContent = ({ date, sectorFilter }: { date: string; sectorFilter: Sector }) => {
+const TabContent = ({ date, sectorFilter }: { date: string; sectorFilter: Sector | null }) => {
     const router = useRouter();
     const [expandedRows, setExpandedRows] = React.useState<number[]>([]);
     const [windowHeight, setWindowHeight] = React.useState<number>(0);

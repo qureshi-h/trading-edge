@@ -34,7 +34,6 @@ export const analysisRanges = {
 };
 
 export const sectorOptions = [
-    'All',
     'Basic Materials',
     'Communication Services',
     'Consumer Cyclical',

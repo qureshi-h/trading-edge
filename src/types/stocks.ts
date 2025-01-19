@@ -1,5 +1,3 @@
-import { Sector } from './general';
-
 export interface Stock {
     exchange: string;
     sector: string;

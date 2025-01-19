@@ -1,3 +1,5 @@
+import { GenericObject } from '@/types/general';
+
 export const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 if (!API_URL) {
@@ -9,12 +11,8 @@ interface ApiResponse<T = unknown> {
     status: number;
 }
 
-interface ApiParams {
-    [key: string]: string | number | boolean;
-}
-
 export const api = {
-    get: async <T>(endpoint: string, params: ApiParams = {}): Promise<ApiResponse<T>> => {
+    get: async <T>(endpoint: string, params: GenericObject = {}): Promise<ApiResponse<T>> => {
         const url = new URL(endpoint, API_URL);
         Object.keys(params).forEach((key) => url.searchParams.append(key, String(params[key])));
 
