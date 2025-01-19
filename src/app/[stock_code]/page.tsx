@@ -12,7 +12,7 @@ import { getDatesExcludingWeekends } from '@/utils/dates';
 
 const Page = async ({ params }: { params: Promise<{ stock_code: string }> }) => {
     const { stock_code } = await params;
-    const stockInfo: Stock | null = await fetchStock(stock_code);
+    const stockInfo: Stock | null = await fetchStock(stock_code.toUpperCase());
     const currentDate = getDatesExcludingWeekends(1)[0];
     const stockAnalysis: StockAnalysis | null = await fetchStockAnalysis(stock_code, currentDate);
 

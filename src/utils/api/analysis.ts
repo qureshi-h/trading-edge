@@ -1,5 +1,5 @@
 import { GenericObject } from '@/types/general';
-import { api } from './api';
+import { api, ApiParams } from './api';
 import { StockAnalysis, TopStock } from '@/types/stocks';
 
 export const fetchStockAnalysis = async (
@@ -22,7 +22,11 @@ export const fetchTopAnalysis = async (
     sectorFilter: string | null,
 ): Promise<TopAnalysisResponse> => {
     try {
-        const params: GenericObject = { date, page, size, sector: sectorFilter };
+        const params: ApiParams = { date, page, size };
+        if (sectorFilter !== null) {
+            params.sector = sectorFilter;
+        }
+
         const response = await api.get<TopAnalysisResponse>(`/api/analysis/top`, params);
         return response.status === 200 ? response.data : { rows: [], finalPage: true, page: 0 };
     } catch (err) {
