@@ -103,6 +103,7 @@
 .ant-select-item-option-content {
     color: white;
     text-align: center;
+    padding-inline-end: 0px !important;
 }
 
 .top-section > * .ant-select-item,

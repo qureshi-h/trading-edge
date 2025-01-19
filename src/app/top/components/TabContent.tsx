@@ -7,11 +7,10 @@ import type { ColumnsType } from 'antd/es/table';
 import { Flex, Popover, Spin, Typography } from 'antd';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
-import { Sector } from '@/types/general';
 import { analysisRanges } from '@/utils/constants';
 import { fetchTopAnalysis, TopAnalysisResponse } from '@/utils/api/analysis';
 import { getColorClassFromRange } from '@/utils/colour';
-import { TopStock } from '@/types/stocks';
+import { TopStock, TopStockFilters } from '@/types/stocks';
 
 import '@/app/style.css';
 
@@ -19,7 +18,7 @@ const { Text } = Typography;
 
 const PAGE_SIZE = 10;
 
-const TabContent = ({ date, sectorFilter }: { date: string; sectorFilter: Sector | null }) => {
+const TabContent = ({ date, filters }: { date: string; filters: TopStockFilters }) => {
     const router = useRouter();
     const [expandedRows, setExpandedRows] = React.useState<number[]>([]);
     const [windowHeight, setWindowHeight] = React.useState<number>(0);
@@ -41,13 +40,13 @@ const TabContent = ({ date, sectorFilter }: { date: string; sectorFilter: Sector
 
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
         useInfiniteQuery<TopAnalysisResponse>({
-            queryKey: ['topAnalysis', date, sectorFilter],
+            queryKey: ['topAnalysis', date, filters],
             queryFn: async ({ pageParam = 1 }) => {
                 const response = await fetchTopAnalysis(
                     date,
                     pageParam as number,
                     PAGE_SIZE,
-                    sectorFilter,
+                    filters,
                 );
                 return response;
             },

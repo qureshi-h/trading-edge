@@ -1,3 +1,5 @@
+import { Sector } from './general';
+
 export interface Stock {
     exchange: string;
     sector: string;
@@ -39,4 +41,9 @@ export interface TopStock extends StockAnalysis {
     stock_symbol: string;
     stock_name: string;
     sector: string;
+}
+
+export interface TopStockFilters {
+    sector: Sector | null;
+    daysAboveTrendline: number;
 }

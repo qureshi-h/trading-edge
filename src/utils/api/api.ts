@@ -1,3 +1,5 @@
+import { GenericObject } from '@/types/general';
+
 export const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 if (!API_URL) {
@@ -10,7 +12,7 @@ interface ApiResponse<T = unknown> {
 }
 
 export interface ApiParams {
-    [key: string]: string | number | boolean;
+    [key: string]: string | number | boolean | GenericObject;
 }
 
 export const api = {
