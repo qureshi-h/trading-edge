@@ -1,5 +1,6 @@
 import React from 'react';
 
+import Link from 'next/link';
 import { Col, Flex, Row } from 'antd';
 import Text from 'antd/es/typography/Text';
 import StockSelector from './components/StockSelector';
@@ -7,7 +8,6 @@ import StockSelector from './components/StockSelector';
 import { Stock } from '@/types/stocks';
 import { fetchStocks } from '@/utils/api/stocks';
 import PageContainer from '@/components/PageContainer';
-import Link from 'next/link';
 
 const Page = async () => {
     const stocks: Stock[] = await fetchStocks();

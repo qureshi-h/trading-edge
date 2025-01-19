@@ -46,3 +46,5 @@ export const sectorOptions = [
     'Technology',
     'Utilities',
 ] as const;
+
+export const MAX_DAYS_ABOVE_TRENDLINE = 5;

@@ -45,5 +45,5 @@ export interface TopStock extends StockAnalysis {
 
 export interface TopStockFilters {
     sector: Sector | null;
-    daysAboveTrendline: number;
+    dat: number;
 }

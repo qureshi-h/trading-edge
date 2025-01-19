@@ -1,3 +1,4 @@
+import { MAX_DAYS_ABOVE_TRENDLINE } from '../constants';
 import { api, ApiParams } from './api';
 import { StockAnalysis, TopStock, TopStockFilters } from '@/types/stocks';
 
@@ -26,10 +27,9 @@ export const fetchTopAnalysis = async (
         if (filters.sector !== null) {
             params.sector = filters.sector;
         }
-        if (filters.daysAboveTrendline !== 5) {
-            params.daysAboveTrendline = filters.daysAboveTrendline;
+        if (filters.dat !== MAX_DAYS_ABOVE_TRENDLINE) {
+            params.dat = filters.dat;
         }
-        console.log(params);
 
         const response = await api.get<TopAnalysisResponse>(`/api/analysis/top`, params);
         return response.status === 200 ? response.data : { rows: [], finalPage: true, page: 0 };

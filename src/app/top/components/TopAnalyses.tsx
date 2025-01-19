@@ -7,21 +7,25 @@ import Text from 'antd/es/typography/Text';
 import { Col, Flex, Row, Select, Slider, Tooltip } from 'antd';
 import DateTabs from '@/components/DateTabs';
 
-import { sectorOptions } from '@/utils/constants';
+import { MAX_DAYS_ABOVE_TRENDLINE, sectorOptions } from '@/utils/constants';
 import { getDatesExcludingWeekends } from '@/utils/dates';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { TopStockFilters } from '@/types/stocks';
+import { useSearchParams } from 'next/navigation';
+import { validateDaysAboveTrendline, validateSector } from '@/utils/validation';
 
 const { Option } = Select;
 
 const queryClient = new QueryClient();
 
 const TopAnalyses = () => {
+    const searchParams = useSearchParams();
+
     const [filters, setFilters] = React.useState<TopStockFilters>({
-        sector: null,
-        daysAboveTrendline: 5,
+        sector: validateSector(searchParams.get('sector') as string),
+        dat: validateDaysAboveTrendline(searchParams.get('dat') as string),
     });
 
     const handleFiltersChange = <K extends keyof TopStockFilters>(
@@ -32,6 +36,15 @@ const TopAnalyses = () => {
             ...prev,
             [name]: value,
         }));
+
+        const params = new URLSearchParams(window.location.search);
+        if (value === null || value === undefined) {
+            params.delete(name);
+        } else {
+            params.set(name, String(value));
+        }
+
+        window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
     };
 
     const dates = getDatesExcludingWeekends(7);
@@ -45,17 +58,14 @@ const TopAnalyses = () => {
                             <Tooltip title="Max Consecutive Days Above Trendline" className="mr-1">
                                 <InfoCircleOutlined />{' '}
                             </Tooltip>
-                            DAT:{' '}
-                            {filters.daysAboveTrendline !== 5 ? filters.daysAboveTrendline : 'Max'}
+                            DAT: {filters.dat !== MAX_DAYS_ABOVE_TRENDLINE ? filters.dat : 'Max'}
                         </Text>
                         <Slider
                             min={1}
-                            max={5}
+                            max={MAX_DAYS_ABOVE_TRENDLINE}
                             tooltip={{ open: false }}
-                            defaultValue={filters.daysAboveTrendline}
-                            onChangeComplete={(value) =>
-                                handleFiltersChange('daysAboveTrendline', value)
-                            }
+                            defaultValue={filters.dat}
+                            onChangeComplete={(value) => handleFiltersChange('dat', value)}
                             className="flex-1"
                         />
                     </Flex>
