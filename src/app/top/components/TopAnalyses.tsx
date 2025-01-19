@@ -1,19 +1,18 @@
 'use client';
 
 import React from 'react';
+import { useSearchParams } from 'next/navigation';
 
 import TabContent from './TabContent';
 import Text from 'antd/es/typography/Text';
-import { Col, Flex, Row, Select, Slider, Tooltip } from 'antd';
 import DateTabs from '@/components/DateTabs';
-
-import { MAX_DAYS_ABOVE_TRENDLINE, sectorOptions } from '@/utils/constants';
-import { getDatesExcludingWeekends } from '@/utils/dates';
-
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { InfoCircleOutlined } from '@ant-design/icons';
+import { Col, Flex, Row, Select, Slider, Tooltip } from 'antd';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
 import { TopStockFilters } from '@/types/stocks';
-import { useSearchParams } from 'next/navigation';
+import { getDatesExcludingWeekends } from '@/utils/dates';
+import { MAX_DAYS_ABOVE_TRENDLINE, sectorOptions } from '@/utils/constants';
 import { validateDaysAboveTrendline, validateSector } from '@/utils/validation';
 
 const { Option } = Select;
