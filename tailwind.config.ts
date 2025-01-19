@@ -27,6 +27,14 @@ export default {
             height: {
                 '17/20': '85%',
             },
+            screens: {
+                xs: '576px',
+                sm: '576px',
+                md: '768px',
+                lg: '992px',
+                xl: '1200px',
+                xxl: '1600px',
+            },
         },
     },
     plugins: [],
