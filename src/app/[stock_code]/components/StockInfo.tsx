@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { Col, Flex, Image, Row } from 'antd';
 import Text from 'antd/es/typography/Text';
 import Title from 'antd/es/typography/Title';
+import { Col, Flex, Image, Row } from 'antd';
 
 import { Stock } from '@/types/stocks';
 import { API_URL } from '@/utils/api/api';
