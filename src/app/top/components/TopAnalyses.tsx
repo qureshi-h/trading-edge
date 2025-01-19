@@ -28,6 +28,8 @@ const TopAnalyses = () => {
         dat: validateDaysAboveTrendline(searchParams.get('dat') as string),
     });
 
+    const [temporaryDat, setTemporaryDat] = React.useState<number | undefined>(filters.dat);
+
     const handleFiltersChange = <K extends keyof TopStockFilters>(
         name: K,
         value: TopStockFilters[K],
@@ -55,15 +57,25 @@ const TopAnalyses = () => {
                 <Col xl={8} lg={10} md={12} sm={24} xs={24}>
                     <Flex className="w-full" justify="flex-start" align="center" gap="1rem">
                         <Text className="!w-fit">
-                            <Tooltip title="Max Consecutive Days Above Trendline" className="mr-1">
+                            <Tooltip
+                                title={
+                                    <Flex vertical>
+                                        <Text>Days Above Trendline:</Text>
+                                        <Text>Filter stocks {'<='} value</Text>
+                                    </Flex>
+                                }
+                                className="mr-1"
+                            >
                                 <InfoCircleOutlined />{' '}
                             </Tooltip>
-                            DAT: {filters.dat !== MAX_DAYS_ABOVE_TRENDLINE ? filters.dat : 'Max'}
+                            DAT: {temporaryDat !== MAX_DAYS_ABOVE_TRENDLINE ? temporaryDat : 'Max'}
                         </Text>
                         <Slider
                             min={1}
                             max={MAX_DAYS_ABOVE_TRENDLINE}
                             tooltip={{ open: false }}
+                            value={temporaryDat}
+                            onChange={(value) => setTemporaryDat(value)}
                             defaultValue={filters.dat}
                             onChangeComplete={(value) => handleFiltersChange('dat', value)}
                             className="flex-1"
