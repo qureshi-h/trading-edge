@@ -1,4 +1,3 @@
-import { GenericObject } from '@/types/general';
 import { api, ApiParams } from './api';
 import { StockAnalysis, TopStock } from '@/types/stocks';
 
