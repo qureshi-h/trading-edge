@@ -51,8 +51,6 @@ const TabContent = ({ date, filters }: { date: string; filters: TopStockFilters 
                 return response;
             },
             getNextPageParam: (lastPage): number | undefined => {
-                console.log(lastPage);
-
                 return lastPage?.finalPage ? undefined : lastPage?.page + 1;
             },
             refetchOnWindowFocus: false,

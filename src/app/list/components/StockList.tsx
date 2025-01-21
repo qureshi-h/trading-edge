@@ -5,8 +5,6 @@ import Link from 'next/link';
 import React from 'react';
 
 const StockList = ({ stockList }: { stockList: StockBySector[] }) => {
-    console.log(stockList);
-
     return (
         <Flex vertical justify="center" align="center">
             {stockList.map((sector, sectorIndex) => (
