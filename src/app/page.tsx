@@ -19,7 +19,7 @@ const Page = async () => {
                     <Flex vertical align="center" justify="center" gap={10}>
                         <StockSelector stocks={stocks} />
                         <Text className="!text-lg">
-                            <Link href="/top" className="!text-center !text-lime-400">
+                            <Link href="/top" className="!text-center !text-teal-100">
                                 Looking for Top Picks?
                             </Link>
                         </Text>
