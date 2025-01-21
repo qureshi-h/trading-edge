@@ -38,6 +38,7 @@ export const sectorOptions = [
     'Communication Services',
     'Consumer Cyclical',
     'Consumer Defensive',
+    'Crypto',
     'Energy',
     'Financial Services',
     'Healthcare',
