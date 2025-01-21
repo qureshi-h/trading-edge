@@ -33,6 +33,7 @@ const StockInfo: React.FC<StockInfoProps> = ({ stockInfo, plotImage }) => {
                                 alt={''}
                                 width={100}
                                 height={100}
+                                fallback="/images/fallback-company-icon.png"
                             />
                             <Flex vertical>
                                 <Text className="mb-1 !text-xl !sm:text-2xl !text-white !text-right">
@@ -50,15 +51,17 @@ const StockInfo: React.FC<StockInfoProps> = ({ stockInfo, plotImage }) => {
                         md={{ span: 8, offset: 0 }}
                         xl={{ span: 8, offset: 0 }}
                     >
-                        <Image
-                            src={`${API_URL}/plot/${plotImage}`}
-                            alt={'Plot Not Found!'}
-                            width={'100%'}
-                            className="p-5 backdrop-blur-3xl rounded-xl bg-black/30"
-                            preview={{
-                                className: 'p-5 backdrop-blur-3xl bg-black/30',
-                            }}
-                        />
+                        {plotImage !== null && (
+                            <Image
+                                src={`${API_URL}/plot/${plotImage}`}
+                                alt={'Plot Not Found!'}
+                                width={'100%'}
+                                className="p-5 backdrop-blur-3xl rounded-xl bg-black/30"
+                                preview={{
+                                    className: 'p-5 backdrop-blur-3xl bg-black/30',
+                                }}
+                            />
+                        )}
                     </Col>
                 </Row>
             ) : (
