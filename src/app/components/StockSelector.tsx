@@ -2,13 +2,15 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Flex, Select, Typography } from 'antd';
+
+import Link from 'next/link';
+import { Flex, Select } from 'antd';
+import { ContainerFilled } from '@ant-design/icons';
 
 import { Stock } from '@/types/stocks';
 
 import '@/app/style.css';
 
-const { Title } = Typography;
 const { Option } = Select;
 
 const StockSelector = ({ stocks }: { stocks: Stock[] }) => {
@@ -27,10 +29,7 @@ const StockSelector = ({ stocks }: { stocks: Stock[] }) => {
 
     return (
         <Flex vertical gap={5} align="center" justify="center" className="w-full p-5 pb-0">
-            <Title level={2} className="!text-white mb-0">
-                Select Stock
-            </Title>
-            <Flex vertical gap={5} align="center" className="sm:flex-row w-full gap-3">
+            <Flex gap={5} align="center" className="w-full gap-3">
                 <Select
                     showSearch
                     placeholder="Search by Stock Name or Code"
@@ -55,11 +54,20 @@ const StockSelector = ({ stocks }: { stocks: Stock[] }) => {
                     disabled={!stock}
                     onClick={handleButtonClick}
                     aria-label="Go to Stock"
-                    className="bg-blue-500 hover:bg-blue-700
+                    className="bg-blue-500 hover:bg-blue-600
                                  disabled:bg-gray-400 disabled:hover:bg-gray-400
                                   text-white font-bold py-2 px-4 rounded"
                 >
                     Go
+                </button>
+                <button
+                    title="View All"
+                    aria-label="View All"
+                    className="bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded"
+                >
+                    <Link href="/list" className="transparent-hover">
+                        <ContainerFilled />
+                    </Link>
                 </button>
             </Flex>
         </Flex>

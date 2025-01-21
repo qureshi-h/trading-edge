@@ -1,5 +1,5 @@
 import { api } from './api';
-import { Stock } from '@/types/stocks';
+import { Stock, StockBySector } from '@/types/stocks';
 
 export const fetchStock = async (stockCode: string): Promise<Stock | null> => {
     try {
@@ -14,6 +14,16 @@ export const fetchStock = async (stockCode: string): Promise<Stock | null> => {
 export const fetchStocks = async (): Promise<Stock[]> => {
     try {
         const response = await api.get<Stock[]>('/api/stocks/all');
+        return response.status === 200 ? response.data : [];
+    } catch (err) {
+        console.error('Error fetching stocks:', err);
+        return [];
+    }
+};
+
+export const fetchStocksBySector = async (): Promise<StockBySector[]> => {
+    try {
+        const response = await api.get<StockBySector[]>('/api/stocks/sector');
         return response.status === 200 ? response.data : [];
     } catch (err) {
         console.error('Error fetching stocks:', err);

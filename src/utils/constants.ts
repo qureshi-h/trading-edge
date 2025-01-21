@@ -42,6 +42,7 @@ export const sectorOptions = [
     'Energy',
     'Financial Services',
     'Healthcare',
+    'Index Funds and ETFs',
     'Industrials',
     'Real Estate',
     'Technology',

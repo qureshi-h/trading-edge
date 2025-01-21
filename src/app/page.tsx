@@ -15,11 +15,11 @@ const Page = async () => {
     return (
         <PageContainer>
             <Row className="w-full" justify="center" align={'middle'}>
-                <Col xs={24} sm={24} md={12} lg={10}>
+                <Col xs={24} sm={24} md={12} lg={10} xl={8}>
                     <Flex vertical align="center" justify="center" gap={10}>
                         <StockSelector stocks={stocks} />
                         <Text className="!text-lg">
-                            <Link href="/top" className="!text-center bg-black">
+                            <Link href="/top" className="!text-center !text-lime-400">
                                 Looking for Top Picks?
                             </Link>
                         </Text>

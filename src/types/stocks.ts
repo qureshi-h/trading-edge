@@ -47,3 +47,8 @@ export interface TopStockFilters {
     sector: Sector | null;
     dat: number;
 }
+
+export interface StockBySector {
+    sector: Sector;
+    stocks: Stock[];
+}
