@@ -16,9 +16,9 @@ const StockList = ({ stockList }: { stockList: StockBySector[] }) => {
                     align="center"
                 >
                     <Text className="text-2xl py-3 !text-cyan-300 w-fit">{sector.sector}</Text>
-                    <Row gutter={[0, 10]} className='w-full'>
+                    <Row gutter={[0, 10]} className="w-full">
                         {sector.stocks.map((stock) => (
-                            <Col xs={6} sm={5} md={4} lg={3} >
+                            <Col xs={6} sm={5} md={4} lg={3} key={stock.stock_id}>
                                 <Flex className="justify-center">
                                     <Tooltip title={stock.stock_name}>
                                         <Link
