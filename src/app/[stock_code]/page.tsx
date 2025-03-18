@@ -1,14 +1,15 @@
 import React from 'react';
-import { Col } from 'antd';
+import { Col, Flex, Tabs } from 'antd';
 
-import StockInfo from './components/StockInfo';
-import StockReport from './components/StockReport';
 import PageContainer from '@/components/PageContainer';
 
 import { fetchStock } from '@/utils/api/stocks';
 import { fetchStockAnalysis } from '@/utils/api/analysis';
 import { Stock, StockAnalysis } from '@/types/stocks';
 import { getDatesExcludingWeekends } from '@/utils/dates';
+import StockInfo from './components/analysis/StockInfo';
+import StockReport from './components/analysis/StockReport';
+import NewsContainer from './components/news/Container';
 
 const getLastAnalysis = async (stock_code: string) => {
     for (const currentDate of getDatesExcludingWeekends(7)) {
@@ -28,6 +29,27 @@ const Page = async ({ params }: { params: Promise<{ stock_code: string }> }) => 
     const stockInfo: Stock | null = await fetchStock(stock_code.toUpperCase());
     const { currentDate, stockAnalysis } = await getLastAnalysis(stock_code.toUpperCase());
 
+    const tabItems = [
+        {
+            label: 'Analysis',
+            key: 'analysis',
+            children: (
+                <Flex vertical>
+                    <StockInfo stockInfo={stockInfo} plotImage={stockAnalysis?.image ?? null} />
+                    <StockReport
+                        stockCode={stock_code}
+                        defaultStockAnalyses={{ [currentDate]: stockAnalysis }}
+                    />
+                </Flex>
+            ),
+        },
+        {
+            label: 'News',
+            key: 'news',
+            children: <NewsContainer stock_code={stock_code} />,
+        },
+    ];
+
     return (
         <PageContainer>
             <Col
@@ -39,10 +61,13 @@ const Page = async ({ params }: { params: Promise<{ stock_code: string }> }) => 
                 lg={14}
                 xl={10}
             >
-                <StockInfo stockInfo={stockInfo} plotImage={stockAnalysis?.image ?? null} />
-                <StockReport
-                    stockCode={stock_code}
-                    defaultStockAnalyses={{ [currentDate]: stockAnalysis }}
+                <Tabs
+                    defaultActiveKey={'news'}
+                    tabPosition={'top'}
+                    items={tabItems}
+                    className="custom-tabs"
+                    type="line"
+                    centered
                 />
             </Col>
         </PageContainer>

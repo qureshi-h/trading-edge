@@ -5,7 +5,7 @@ import Title from 'antd/es/typography/Title';
 import TopAnalyses from './components/TopAnalyses';
 import PageContainer from '@/components/PageContainer';
 
-import '@/app/style.css';
+import '@/styles/globals.css';
 
 const Page = async () => {
     return (
@@ -19,7 +19,7 @@ const Page = async () => {
             >
                 <Flex
                     vertical
-                    className="top-section h-fit w-full  sm:w-full md:w-5/6 lg:w-4/6 backdrop-blur-3xl rounded-3xl py-5 px-5"
+                    className="top-section h-fit w-full sm:w-full md:w-5/6 lg:w-4/6 backdrop-blur-3xl rounded-3xl py-5 px-5"
                     gap="1rem"
                 >
                     <Title className="!text-white w-full !text-center">Top Picks</Title>

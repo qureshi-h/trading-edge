@@ -9,7 +9,7 @@ import { ContainerFilled } from '@ant-design/icons';
 
 import { Stock } from '@/types/stocks';
 
-import '@/app/style.css';
+import '@/styles/globals.css';
 
 const { Option } = Select;
 
@@ -29,7 +29,12 @@ const StockSelector = ({ stocks }: { stocks: Stock[] }) => {
 
     return (
         <Flex vertical gap={5} align="center" justify="center" className="w-full p-5 sm:px-3 pb-0">
-            <Flex gap={5} align="center" justify='center' className="w-full xs:flex-row flex-wrap gap-3">
+            <Flex
+                gap={5}
+                align="center"
+                justify="center"
+                className="w-full xs:flex-row flex-wrap gap-3"
+            >
                 <Select
                     showSearch
                     placeholder="Search by Stock Name or Code"

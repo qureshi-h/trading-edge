@@ -22,7 +22,7 @@ import { initialState, reducer } from '../reducer';
 import { HeldStock, Stock } from '@/types/stocks';
 import { api } from '@/utils/api/api';
 
-import '@/app/style.css';
+import '@/styles/globals.css';
 
 const { Option } = Select;
 

@@ -12,7 +12,7 @@ import { fetchTopAnalysis, TopAnalysisResponse } from '@/utils/api/analysis';
 import { getColorClassFromRange } from '@/utils/colour';
 import { TopStock, TopStockFilters } from '@/types/stocks';
 
-import '@/app/style.css';
+import '@/styles/globals.css';
 
 const { Text } = Typography;
 

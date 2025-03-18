@@ -1,0 +1,125 @@
+.custom-tabs .ant-tabs-tab {
+    color: white;
+}
+
+.custom-tabs .ant-tabs-tab-active {
+    color: #1890ff;
+}
+
+.ant-typography {
+    color: white;
+}
+
+.ant-btn:disabled {
+    color: rgb(198, 195, 195);
+}
+
+.inherit-font-size * > .ant-typography {
+    font-size: inherit;
+    line-height: inherit;
+}
+
+.inherit-font-color * > .ant-typography {
+    color: inherit;
+    word-break: keep-all;
+}
+
+.no-wrap * > .ant-flex {
+    flex: 0 0 auto;
+    max-height: 1.5rem;
+    overflow: auto;
+}
+.no-wrap * > .ant-typography {
+    flex: 0 0 auto !important;
+    max-height: 1.5rem !important;
+    overflow: auto !important;
+}
+
+.top-section {
+    background: linear-gradient(
+        to right,
+        rgba(14, 12, 12, 1) 10%,
+        rgba(14, 12, 12, 0.9) 20%,
+        rgba(14, 12, 12, 0.7) 30%,
+        rgba(14, 12, 12, 0.2) 100%
+    );
+}
+
+.top-section > * .ant-table-cell,
+.ant-table,
+.ant-table-footer {
+    background-color: transparent !important;
+    border: none !important;
+    color: white;
+}
+
+.top-section > * .ant-table-cell-fix-left {
+    z-index: 100;
+    background: rgba(14, 12, 12, 0.9) !important;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.top-section > * .ant-table-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.677) !important;
+    padding-bottom: 0 !important;
+}
+
+.top-section > * .ant-table-tbody {
+    padding-bottom: 1rem;
+}
+
+.top-section > * .ant-table-column-sorter,
+.ant-dropdown-trigger {
+    color: white !important;
+}
+
+.ant-table-column-title {
+    color: white;
+}
+
+.ant-table-tbody-virtual-scrollbar-thumb {
+    background: rgb(70, 70, 70) !important;
+}
+
+.top-section > * .ant-select-selector,
+.ant-select-dropdown {
+    background: transparent !important;
+    padding: 1rem 0;
+    /* border-color: transparent !important; */
+    color: white !important;
+    --tw-backdrop-blur: blur(100px) !important;
+    -webkit-backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness)
+        var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate)
+        var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate)
+        var(--tw-backdrop-sepia) !important;
+    backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness)
+        var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate)
+        var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate)
+        var(--tw-backdrop-sepia) !important;
+}
+
+.top-section > * .ant-select-selection-placeholder,
+.ant-select-item,
+.ant-select-item-option-content {
+    color: white;
+    text-align: center;
+    padding-inline-end: 0px !important;
+}
+
+.top-section > * .ant-select-item,
+.ant-select-item-option-content {
+    color: white !important;
+}
+
+.top-section > * .ant-select-dropdown,
+.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+    background-color: rgba(18, 18, 18, 0.6) !important;
+}
+
+.top-section > * .ant-slider-rail {
+    background: gray !important;
+}
+
+:hover .transparent-hover {
+    color: unset;
+}

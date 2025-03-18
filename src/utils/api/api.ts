@@ -16,14 +16,20 @@ export interface ApiParams {
 }
 
 export const api = {
-    get: async <T>(endpoint: string, params: ApiParams = {}): Promise<ApiResponse<T>> => {
-        const url = new URL(endpoint, API_URL);
+    get: async <T>(
+        endpoint: string,
+        params: ApiParams = {},
+        customHeaders: HeadersInit = {},
+        apiUrl: string = API_URL,
+    ): Promise<ApiResponse<T>> => {
+        const url = new URL(endpoint, apiUrl);
         Object.keys(params).forEach((key) => url.searchParams.append(key, String(params[key])));
 
         const response = await fetch(url.toString(), {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
+                // 'Content-Type': 'application/json',
+                ...customHeaders,
             },
         });
 
@@ -31,11 +37,17 @@ export const api = {
         return { data, status: response.status };
     },
 
-    post: async <T>(endpoint: string, body: object): Promise<ApiResponse<T>> => {
-        const response = await fetch(new URL(endpoint, API_URL).toString(), {
+    post: async <T>(
+        endpoint: string,
+        body: object,
+        customHeaders: HeadersInit = {},
+        apiUrl: string = API_URL,
+    ): Promise<ApiResponse<T>> => {
+        const response = await fetch(new URL(endpoint, apiUrl).toString(), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                ...customHeaders,
             },
             body: JSON.stringify(body),
         });
