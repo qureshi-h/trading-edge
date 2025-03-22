@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useReducer, useState } from 'react';
+
 import dayjs, { Dayjs } from 'dayjs';
 import {
     Form,
@@ -15,11 +16,12 @@ import {
     Typography,
     FormProps,
     message,
+    ConfigProvider,
 } from 'antd';
 
+import { api } from '@/utils/api/api';
 import { initialState, reducer } from '../reducer';
 import { HeldStock, Stock } from '@/types/stocks';
-import { api } from '@/utils/api/api';
 
 const { Option } = Select;
 
@@ -179,7 +181,7 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
     return (
         <Flex
             vertical
-            className="w-full md:w-full lg:w-1/3 lg:h-17/20 overflow-y-scroll"
+            className="w-full sm:w-full md:w-1/2 lg:w-1/3 lg:h-17/20 overflow-y-scroll"
             justify="center"
             align="center"
         >
@@ -199,208 +201,225 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
                 animated={{ inkBar: true, tabPane: true }}
                 className="custom-tabs"
             />
-            <Form
-                form={form}
-                layout="vertical"
-                onFinish={onFinish}
-                className="w-full bg-white p-4 sm:p-6 rounded-lg shadow-md  overflow-x-scroll"
-                size="large"
-                initialValues={{ trade_type: 'stock' }}
-                onValuesChange={handleFormValuesChange}
-            >
-                {/* Select Stock or Options */}
-                <Form.Item
-                    label="Trade Type"
-                    name="trade_type"
-                    rules={[{ required: true, message: 'Please select a trade type!' }]}
-                >
-                    <Select
-                        onChange={(value) =>
-                            dispatch({ type: 'SET_IS_OPTIONS', payload: value === 'options' })
-                        }
-                    >
-                        <Option value="stock">Stock</Option>
-                        <Option value="options">Option</Option>
-                    </Select>
-                </Form.Item>
-
-                {/* Trader Name */}
-                <Form.Item
-                    label="Trader Name"
-                    name="trader"
-                    rules={[{ required: true, message: 'Please select a trader!' }]}
-                >
-                    <Select placeholder="Select Trader">
-                        <Option value="Cyle">Cyle</Option>
-                        <Option value="Hamza">Hamza</Option>
-                        <Option value="Nick">Nick</Option>
-                    </Select>
-                </Form.Item>
-
-                <Form.Item
-                    label="Stock"
-                    name="stock"
-                    rules={[{ required: true, message: 'Please select a stock!' }]}
-                    style={{ marginBottom: 5 }}
-                >
-                    <Select
-                        showSearch
-                        placeholder="Search by Stock Name or Code"
-                        optionFilterProp="children"
-                        onChange={handleStockChange}
-                    >
-                        {tab === 'Sell'
-                            ? state.currentlyHeldStocks?.map((stock) => (
-                                  <Option value={stock.stock_id} key={stock.stock_id}>
-                                      {stock.stock_symbol} - {stock.stock_name}
-                                  </Option>
-                              ))
-                            : stocks.map((stock) => (
-                                  <Option value={stock.stock_id} key={stock.stock_id}>
-                                      {stock.stock_symbol} - {stock.stock_name}
-                                  </Option>
-                              ))}
-                    </Select>
-                </Form.Item>
-
-                {/* Displaying Stock Exchange */}
-                <Flex align="center" className="ml-2 my-0" justify="center">
-                    <Flex gap="middle" style={{ opacity: state.selectedStock ? 1 : 0 }}>
-                        <Typography.Text>
-                            <strong>Sector:</strong> {state.selectedStock?.sector}
-                        </Typography.Text>
-                        <Typography.Text>
-                            <strong>Exchange:</strong> {state.selectedStock?.exchange}
-                        </Typography.Text>
-                    </Flex>
-                </Flex>
-
-                {/* Buy/Sale Price */}
-                <Form.Item
-                    label={`Price`}
-                    name="price"
-                    rules={[{ required: true, message: `Please enter the ${tab} price!` }]}
-                >
-                    <InputNumber
-                        placeholder={`Enter ${tab} Price`}
-                        min={0}
-                        className="w-full"
-                        prefix="$"
-                    />
-                </Form.Item>
-
-                {/* Buy/Sale Date */}
-                <Form.Item
-                    label={`Date`}
-                    name="date"
-                    rules={[{ required: true, message: `Please select the ${tab} date!` }]}
-                >
-                    <DatePicker className="w-full" placeholder={`Enter ${tab} Date`} />
-                </Form.Item>
-
-                {/* Option Fields (Only display if "Options" is selected) */}
-                {state.isOptions && (
-                    <>
-                        <Form.Item
-                            label="Option Type"
-                            name="option_type"
-                            rules={[{ required: true, message: 'Please select an option type!' }]}
-                        >
-                            <Select placeholder="Select Option Type">
-                                <Option value="call">Call</Option>
-                                <Option value="put">Put</Option>
-                            </Select>
-                        </Form.Item>
-
-                        <Form.Item
-                            label="Strike Price"
-                            name="strike_price"
-                            rules={[{ required: true, message: 'Please enter the strike price!' }]}
-                        >
-                            <InputNumber
-                                placeholder="Enter Strike Price"
-                                min={0}
-                                className="w-full"
-                                prefix="$"
-                                precision={2}
-                            />
-                        </Form.Item>
-
-                        {tab === 'Buy' && (
-                            <>
-                                <Form.Item
-                                    label="Expiration Date"
-                                    name="expiration_date"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'Please select the expiration date!',
-                                        },
-                                    ]}
-                                    style={{ marginBottom: 5 }}
-                                >
-                                    <DatePicker
-                                        className="w-full"
-                                        placeholder={`Enter Expiration Date`}
-                                        minDate={state.tradeDate}
-                                        disabled={!state.tradeDate}
-                                    />
-                                </Form.Item>
-
-                                {/* Displaying Time to Expire */}
-                                <Flex align="center" className="ml-2 my-0" justify="center">
-                                    <Flex
-                                        gap="middle"
-                                        style={{ opacity: state.timeToExpire ? 1 : 0 }}
-                                    >
-                                        <Typography.Text>
-                                            <strong>Time to Expire:</strong> {state.timeToExpire}
-                                        </Typography.Text>
-                                    </Flex>
-                                </Flex>
-                            </>
-                        )}
-                    </>
-                )}
-
-                {/* Units */}
-                <Form.Item
-                    label={`${state.isOptions ? 'Contracts' : 'Units'}`}
-                    name="units"
-                    rules={[
-                        {
-                            required: true,
-                            message: `Please enter the number of ${
-                                state.isOptions ? 'contracts' : 'inits'
-                            }!`,
+            <ConfigProvider
+                theme={{
+                    components: {
+                        Form: {
+                            labelColor: 'white',
                         },
-                        { type: 'integer', message: 'Units must be a valid integer!' },
-                    ]}
+                    },
+                }}
+            >
+                <Form
+                    form={form}
+                    layout="vertical"
+                    onFinish={onFinish}
+                    className="w-full p-4 sm:p-6 rounded-lg overflow-x-scroll backdrop-blur-3xl !bg-transparent"
+                    size="large"
+                    initialValues={{ trade_type: 'stock' }}
+                    onValuesChange={handleFormValuesChange}
                 >
-                    <InputNumber
-                        placeholder={`Enter Number of ${state.isOptions ? 'Contracts' : 'Units'}`}
-                        min={1}
-                        className="w-full"
-                        max={state.netUnits}
-                    />
-                </Form.Item>
+                    {/* Select Stock or Options */}
+                    <Form.Item
+                        label="Trade Type"
+                        name="trade_type"
+                        rules={[{ required: true, message: 'Please select a trade type!' }]}
+                    >
+                        <Select
+                            onChange={(value) =>
+                                dispatch({ type: 'SET_IS_OPTIONS', payload: value === 'options' })
+                            }
+                        >
+                            <Option value="stock">Stock</Option>
+                            <Option value="options">Option</Option>
+                        </Select>
+                    </Form.Item>
 
-                {/* Rationale */}
-                <Form.Item
-                    label="Rationale"
-                    name="rationale"
-                    rules={[{ required: true, message: 'Please enter a rationale!' }]}
-                >
-                    <Input placeholder="Enter Rationale" className="w-full" />
-                </Form.Item>
+                    {/* Trader Name */}
+                    <Form.Item
+                        label="Trader Name"
+                        name="trader"
+                        rules={[{ required: true, message: 'Please select a trader!' }]}
+                    >
+                        <Select placeholder="Select Trader">
+                            <Option value="Cyle">Cyle</Option>
+                            <Option value="Hamza">Hamza</Option>
+                            <Option value="Nick">Nick</Option>
+                        </Select>
+                    </Form.Item>
 
-                {/* Submit Button */}
-                <Form.Item className="text-center" label={null}>
-                    <Button type="primary" htmlType="submit">
-                        Submit Trade
-                    </Button>
-                </Form.Item>
-            </Form>
+                    <Form.Item
+                        label="Stock"
+                        name="stock"
+                        rules={[{ required: true, message: 'Please select a stock!' }]}
+                        style={{ marginBottom: 5 }}
+                    >
+                        <Select
+                            showSearch
+                            placeholder="Search by Stock Name or Code"
+                            optionFilterProp="children"
+                            onChange={handleStockChange}
+                        >
+                            {tab === 'Sell'
+                                ? state.currentlyHeldStocks?.map((stock) => (
+                                      <Option value={stock.stock_id} key={stock.stock_id}>
+                                          {stock.stock_symbol} - {stock.stock_name}
+                                      </Option>
+                                  ))
+                                : stocks.map((stock) => (
+                                      <Option value={stock.stock_id} key={stock.stock_id}>
+                                          {stock.stock_symbol} - {stock.stock_name}
+                                      </Option>
+                                  ))}
+                        </Select>
+                    </Form.Item>
+
+                    {/* Displaying Stock Exchange */}
+                    <Flex align="center" className="ml-2 my-0" justify="center">
+                        <Flex gap="middle" style={{ opacity: state.selectedStock ? 1 : 0 }}>
+                            <Typography.Text>
+                                <strong>Sector:</strong> {state.selectedStock?.sector}
+                            </Typography.Text>
+                            <Typography.Text>
+                                <strong>Exchange:</strong> {state.selectedStock?.exchange}
+                            </Typography.Text>
+                        </Flex>
+                    </Flex>
+
+                    {/* Buy/Sale Price */}
+                    <Form.Item
+                        label={`Price`}
+                        name="price"
+                        rules={[{ required: true, message: `Please enter the ${tab} price!` }]}
+                    >
+                        <InputNumber
+                            placeholder={`Enter ${tab} Price`}
+                            min={0}
+                            className="w-full"
+                            prefix="$"
+                        />
+                    </Form.Item>
+
+                    {/* Buy/Sale Date */}
+                    <Form.Item
+                        label={`Date`}
+                        name="date"
+                        rules={[{ required: true, message: `Please select the ${tab} date!` }]}
+                    >
+                        <DatePicker className="w-full" placeholder={`Enter ${tab} Date`} />
+                    </Form.Item>
+
+                    {/* Option Fields (Only display if "Options" is selected) */}
+                    {state.isOptions && (
+                        <>
+                            <Form.Item
+                                label="Option Type"
+                                name="option_type"
+                                rules={[
+                                    { required: true, message: 'Please select an option type!' },
+                                ]}
+                            >
+                                <Select placeholder="Select Option Type">
+                                    <Option value="call">Call</Option>
+                                    <Option value="put">Put</Option>
+                                </Select>
+                            </Form.Item>
+
+                            <Form.Item
+                                label="Strike Price"
+                                name="strike_price"
+                                rules={[
+                                    { required: true, message: 'Please enter the strike price!' },
+                                ]}
+                            >
+                                <InputNumber
+                                    placeholder="Enter Strike Price"
+                                    min={0}
+                                    className="w-full"
+                                    prefix="$"
+                                    precision={2}
+                                />
+                            </Form.Item>
+
+                            {tab === 'Buy' && (
+                                <>
+                                    <Form.Item
+                                        label="Expiration Date"
+                                        name="expiration_date"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Please select the expiration date!',
+                                            },
+                                        ]}
+                                        style={{ marginBottom: 5 }}
+                                    >
+                                        <DatePicker
+                                            className="w-full"
+                                            placeholder={`Enter Expiration Date`}
+                                            minDate={state.tradeDate}
+                                            disabled={!state.tradeDate}
+                                        />
+                                    </Form.Item>
+
+                                    {/* Displaying Time to Expire */}
+                                    <Flex align="center" className="ml-2 my-0" justify="center">
+                                        <Flex
+                                            gap="middle"
+                                            style={{ opacity: state.timeToExpire ? 1 : 0 }}
+                                        >
+                                            <Typography.Text>
+                                                <strong>Time to Expire:</strong>{' '}
+                                                {state.timeToExpire}
+                                            </Typography.Text>
+                                        </Flex>
+                                    </Flex>
+                                </>
+                            )}
+                        </>
+                    )}
+
+                    {/* Units */}
+                    <Form.Item
+                        label={`${state.isOptions ? 'Contracts' : 'Units'}`}
+                        name="units"
+                        rules={[
+                            {
+                                required: true,
+                                message: `Please enter the number of ${
+                                    state.isOptions ? 'contracts' : 'inits'
+                                }!`,
+                            },
+                            { type: 'integer', message: 'Units must be a valid integer!' },
+                        ]}
+                    >
+                        <InputNumber
+                            placeholder={`Enter Number of ${
+                                state.isOptions ? 'Contracts' : 'Units'
+                            }`}
+                            min={1}
+                            className="w-full"
+                            max={state.netUnits}
+                        />
+                    </Form.Item>
+
+                    {/* Rationale */}
+                    <Form.Item
+                        label="Rationale"
+                        name="rationale"
+                        rules={[{ required: true, message: 'Please enter a rationale!' }]}
+                    >
+                        <Input placeholder="Enter Rationale" className="w-full" />
+                    </Form.Item>
+
+                    {/* Submit Button */}
+                    <Form.Item className="text-center" label={null}>
+                        <Button type="primary" htmlType="submit">
+                            Submit Trade
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </ConfigProvider>
         </Flex>
     );
 };
