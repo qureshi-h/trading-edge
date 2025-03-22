@@ -50,3 +50,8 @@ export const sectorOptions = [
 ] as const;
 
 export const MAX_DAYS_ABOVE_TRENDLINE = 5;
+
+export enum AIProvider {
+    DEEPSEEK = 'DeepSeek',
+    OPENAI = 'OpenAI',
+}

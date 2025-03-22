@@ -11,8 +11,13 @@ import { NewsResponse } from '@/types/news';
 
 import '@/styles/collapse.css';
 
-const Page = ({ stockCode, newsData }: { stockCode: string; newsData: NewsResponse[] }) => {
-    const items: CollapseProps['items'] = newsData.map((article: NewsResponse, index: number) => ({
+interface PageProps {
+    stockCode: string;
+    newsData: NewsResponse[];
+}
+
+const generateCollapseItems = (newsData: NewsResponse[]): CollapseProps['items'] => {
+    return newsData.map((article: NewsResponse, index: number) => ({
         key: index.toString(),
         label: article.headline,
         children: (
@@ -28,11 +33,27 @@ const Page = ({ stockCode, newsData }: { stockCode: string; newsData: NewsRespon
             </Flex>
         ),
         extra: (
-            <Link href={article.url} target="_blank" rel="noopener noreferrer" className="ml-5">
+            <Link
+                href={article.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ml-5"
+                aria-label="Open article in new tab"
+            >
                 <ExportOutlined className="!text-white hover:!text-blue-500" />
             </Link>
         ),
     }));
+};
+
+const EmptyState = () => (
+    <Flex className="w-full p-3" justify="center">
+        <Text className="!text-white">Nothing recent found!</Text>
+    </Flex>
+);
+
+const Page: React.FC<PageProps> = ({ stockCode, newsData }) => {
+    const items = React.useMemo(() => generateCollapseItems(newsData), [newsData]);
 
     return (
         <React.Fragment>
@@ -47,7 +68,7 @@ const Page = ({ stockCode, newsData }: { stockCode: string; newsData: NewsRespon
                     <Collapse accordion items={items} size="large" />
                 </Flex>
             ) : (
-                <Text className="!text-white">Nothing recent found!</Text>
+                <EmptyState />
             )}
         </React.Fragment>
     );
