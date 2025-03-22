@@ -28,6 +28,7 @@ const NewsSummariser = ({
             .then((response) => {
                 if (response.status === 200) {
                     setSummarisedNews(response.data.summary);
+                    setShowSummary(true);
                 } else {
                     throw new Error();
                 }
