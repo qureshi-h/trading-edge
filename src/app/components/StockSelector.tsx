@@ -4,18 +4,18 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import Link from 'next/link';
-import { Flex, Select } from 'antd';
+import { Button, Flex, Select } from 'antd';
 import { ContainerFilled } from '@ant-design/icons';
 
 import { Stock } from '@/types/stocks';
 
-import '@/styles/globals.css';
-
 const { Option } = Select;
 
 const StockSelector = ({ stocks }: { stocks: Stock[] }) => {
-    const [stock, setStock] = useState<string | null>(null);
     const router = useRouter();
+
+    const [stock, setStock] = useState<string | null>(null);
+    const hasStocks = React.useMemo(() => stocks.length > 0, [stocks]);
 
     const handleStockChange = (value: string) => {
         setStock(value);
@@ -45,7 +45,7 @@ const StockSelector = ({ stocks }: { stocks: Stock[] }) => {
                     value={stock}
                     aria-label="Stock Selector"
                 >
-                    {stocks.length > 0 ? (
+                    {hasStocks ? (
                         stocks.map((stock) => (
                             <Option value={stock.stock_symbol} key={stock.stock_id}>
                                 {stock.stock_symbol} - {stock.stock_name}
@@ -55,25 +55,20 @@ const StockSelector = ({ stocks }: { stocks: Stock[] }) => {
                         <Option disabled>No stocks available</Option>
                     )}
                 </Select>
-                <button
+                <Button
                     disabled={!stock}
                     onClick={handleButtonClick}
                     aria-label="Go to Stock"
-                    className="bg-blue-500 hover:bg-blue-600
-                                 disabled:bg-gray-400 disabled:hover:bg-gray-400
-                                  text-white font-bold py-2 px-4 rounded"
+                    color="blue"
+                    variant="solid"
                 >
                     Go
-                </button>
-                <button
-                    title="View All"
-                    aria-label="View All"
-                    className="bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded"
-                >
+                </Button>
+                <Button title="View All" aria-label="View All" color="volcano" variant="solid">
                     <Link href="/list" className="transparent-hover">
                         <ContainerFilled />
                     </Link>
-                </button>
+                </Button>
             </Flex>
         </Flex>
     );

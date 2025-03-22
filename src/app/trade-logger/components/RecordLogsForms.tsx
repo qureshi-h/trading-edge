@@ -14,15 +14,12 @@ import {
     Flex,
     Typography,
     FormProps,
-    ConfigProvider,
     message,
 } from 'antd';
 
 import { initialState, reducer } from '../reducer';
 import { HeldStock, Stock } from '@/types/stocks';
 import { api } from '@/utils/api/api';
-
-import '@/styles/globals.css';
 
 const { Option } = Select;
 
@@ -399,11 +396,9 @@ const RecordLogsForms: React.FC<RecordLogsFormsProps> = ({ stocks }) => {
 
                 {/* Submit Button */}
                 <Form.Item className="text-center" label={null}>
-                    <ConfigProvider wave={{ disabled: true }}>
-                        <Button type="primary" htmlType="submit">
-                            Submit Trade
-                        </Button>
-                    </ConfigProvider>
+                    <Button type="primary" htmlType="submit">
+                        Submit Trade
+                    </Button>
                 </Form.Item>
             </Form>
         </Flex>

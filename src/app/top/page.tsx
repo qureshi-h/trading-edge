@@ -5,8 +5,6 @@ import Title from 'antd/es/typography/Title';
 import TopAnalyses from './components/TopAnalyses';
 import PageContainer from '@/components/PageContainer';
 
-import '@/styles/globals.css';
-
 const Page = async () => {
     return (
         <PageContainer className="h-screen px-4 md:py-10 lg:py-0">

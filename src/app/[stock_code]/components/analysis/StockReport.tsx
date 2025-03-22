@@ -10,7 +10,6 @@ import { fetchStockAnalysis } from '@/utils/api/analysis';
 import { getColorClassFromRange } from '@/utils/colour';
 import { getDatesExcludingWeekends } from '@/utils/dates';
 
-import '@/app/style.css';
 import { analysisRanges } from '@/utils/constants';
 import { InfoCircleOutlined } from '@ant-design/icons';
 

@@ -12,8 +12,6 @@ import { fetchTopAnalysis, TopAnalysisResponse } from '@/utils/api/analysis';
 import { getColorClassFromRange } from '@/utils/colour';
 import { TopStock, TopStockFilters } from '@/types/stocks';
 
-import '@/styles/globals.css';
-
 const { Text } = Typography;
 
 const PAGE_SIZE = 10;

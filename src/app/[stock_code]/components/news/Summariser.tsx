@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { Flex, notification, Spin } from 'antd';
+import { Button, Flex, notification, Spin } from 'antd';
 
 import NewsSummary from './Summary';
 import { ProviderToggle } from './ProviderToggle';
@@ -57,27 +57,25 @@ const NewsSummariser: React.FC<NewsSummariserProps> = ({ stockCode, newsData }) 
             {loading ? (
                 <Spin aria-label="Loading" />
             ) : hasSummary ? (
-                <button
+                <Button
                     onClick={() => setShowSummary(true)}
                     disabled={loading}
-                    className="bg-teal-600 hover:bg-teal-700
-                              disabled:bg-gray-400 disabled:hover:bg-gray-400
-                              text-white font-bold py-2 px-4 rounded"
+                    color="volcano"
+                    variant="solid"
                 >
                     View Summary
-                </button>
+                </Button>
             ) : (
                 <Flex gap="1rem">
                     <ProviderToggle provider={provider} toggleProvider={toggleProvider} />
-                    <button
+                    <Button
                         onClick={handleSummarise}
                         disabled={!newsData || newsData.length === 0 || loading}
-                        className="bg-blue-500 hover:bg-blue-600
-                                    disabled:bg-gray-400 disabled:hover:bg-gray-400
-                                    text-white font-bold py-2 px-4 rounded"
+                        color="blue"
+                        variant="solid"
                     >
                         Summarise
-                    </button>
+                    </Button>
                 </Flex>
             )}
             {summarisedNews !== undefined && (

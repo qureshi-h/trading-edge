@@ -8,10 +8,14 @@ export async function GET(req: Request) {
     const from = url.searchParams.get('from') || '2025-03-17';
     const to = url.searchParams.get('to') || '2025-03-18';
 
-    const testingMode = process.env.NEXT_PUBLIC_NEWS_TESTING_MODE === 'true';
+    const testingMode = process.env.NEXT_PUBLIC_NEWS_TESTING_MODE === 'true' || false;
 
     if (testingMode) {
-        return NextResponse.json(newsData);
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(NextResponse.json(newsData));
+            }, 500);
+        });
     }
 
     try {
