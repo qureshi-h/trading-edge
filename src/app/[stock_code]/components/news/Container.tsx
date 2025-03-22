@@ -1,51 +1,18 @@
-'use client';
-
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 
 import Text from 'antd/es/typography/Text';
-import { Collapse, Flex, Image, notification, Spin } from 'antd';
+import { Collapse, Flex, Image } from 'antd';
 import { ExportOutlined } from '@ant-design/icons';
 import NewsSummariser from './Summariser';
 
 import type { CollapseProps } from 'antd';
 import { NewsResponse } from '@/types/news';
-import { getDateFormatted } from '@/utils/dates';
 
 import '@/styles/collapse.css';
 
-const Page = ({ stock_code }: { stock_code: string }) => {
-    const today = new Date();
-    const yesterday = new Date(today);
-    yesterday.setDate(today.getDate() - 1);
-
-    const to = getDateFormatted(today);
-    const from = getDateFormatted(yesterday);
-
-    const [newsData, setNewsData] = useState<NewsResponse[]>();
-
-    useEffect(() => {
-        const fetchStockAnalysis = () => {
-            fetch(`/api/company-news?symbol=NVDA&from=${from}&to=${to}`)
-                .then((res) => res.json())
-                .then((data) => {
-                    if ('error' in data) {
-                        throw Error(data.error as string);
-                    } else {
-                        setNewsData(data as NewsResponse[]);
-                    }
-                })
-                .catch((error) => {
-                    console.error(error);
-                    notification.error({ message: `Error fetching news for ${stock_code}` });
-                });
-        };
-        fetchStockAnalysis();
-    }, []);
-
-    if (newsData === undefined) return <Spin className="w-full" />;
-
-    const items: CollapseProps['items'] = newsData?.map((article: NewsResponse, index: number) => ({
+const Page = ({ stockCode, newsData }: { stockCode: string; newsData: NewsResponse[] }) => {
+    const items: CollapseProps['items'] = newsData.map((article: NewsResponse, index: number) => ({
         key: index.toString(),
         label: article.headline,
         children: (
@@ -74,9 +41,9 @@ const Page = ({ stock_code }: { stock_code: string }) => {
                     vertical
                     gap="1rem"
                     align="center"
-                    className="max-h-[70vh] overflow-y-auto relative w-full"
+                    className="max-h-[70vh] overflow-y-auto w-full p-3"
                 >
-                    <NewsSummariser newsData={newsData} stock_code={stock_code}/>
+                    <NewsSummariser newsData={newsData} stockCode={stockCode} />
                     <Collapse accordion items={items} size="large" />
                 </Flex>
             ) : (

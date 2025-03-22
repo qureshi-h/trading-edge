@@ -14,7 +14,6 @@ import '@/app/style.css';
 import { analysisRanges } from '@/utils/constants';
 import { InfoCircleOutlined } from '@ant-design/icons';
 
-// Lazy load the content for each tab
 const TabContent = ({
     stockCode,
     date,
@@ -313,12 +312,14 @@ const StockReport = ({ defaultStockAnalyses, stockCode }: StockReportProps) => {
     }));
 
     return (
-        <Tabs
-            defaultActiveKey="today"
-            tabPosition="top"
-            items={tabItems}
-            className="custom-tabs mx-2 lg:mx-3"
-        />
+        <Flex vertical justify="center" className="mx-2 lg:mx-3">
+            <Tabs
+                defaultActiveKey="today"
+                tabPosition="top"
+                items={tabItems}
+                className="custom-tabs mx-2 lg:mx-3"
+            />
+        </Flex>
     );
 };
 
