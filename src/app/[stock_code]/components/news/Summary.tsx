@@ -44,7 +44,9 @@ const NewsSummary = ({
             closeIcon={<CloseOutlined className="!text-white p-5" onClick={onClose} />}
         >
             <Flex className="py-28 px-5 !h-[100vh] w-full overflow-y-auto" vertical>
-                <Text className="!text-4xl !text-white whitespace-pre-line">{displayedText}</Text>
+                <Text className="xl:!text-4xl lg:!text-3xl md:!text-2xl sm:!text-xl !text-white whitespace-pre-line">
+                    {displayedText}
+                </Text>
             </Flex>
         </Modal>
     );
