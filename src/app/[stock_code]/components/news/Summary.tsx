@@ -20,7 +20,11 @@ const NewsSummary = ({
     const [displayedText, setDisplayedText] = useState('');
 
     useEffect(() => {
-        let index = 0;
+        if (!open) {
+            return;
+        }
+
+        let index = displayedText.length;
         const intervalId = setInterval(() => {
             setDisplayedText(text.slice(0, index));
             index += 1;
@@ -30,7 +34,7 @@ const NewsSummary = ({
         }, speed);
 
         return () => clearInterval(intervalId);
-    }, [text, speed]);
+    }, [text, speed, open]);
 
     return (
         <Modal
