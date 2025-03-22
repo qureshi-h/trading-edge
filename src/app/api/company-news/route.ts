@@ -11,7 +11,7 @@ export async function GET(req: Request) {
     const testingMode = process.env.NEXT_PUBLIC_NEWS_TESTING_MODE === 'true' || false;
 
     if (testingMode) {
-        return new Promise((resolve) => {
+        return new Promise<NextResponse>((resolve) => {
             setTimeout(() => {
                 resolve(NextResponse.json(newsData));
             }, 500);
