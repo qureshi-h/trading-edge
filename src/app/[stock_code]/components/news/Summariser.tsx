@@ -1,8 +1,10 @@
 'use client';
 
 import React from 'react';
-import { Flex, Spin } from 'antd';
+
+import { Flex, Spin, Tooltip } from 'antd';
 import { OpenAIOutlined } from '@ant-design/icons';
+import { DeepSeek } from '@lobehub/icons';
 
 import { NewsResponse } from '@/types/news';
 import NewsSummary from './Summary';
@@ -18,12 +20,14 @@ const NewsSummariser = ({
     const [loading, setLoading] = React.useState<boolean>(false);
     const [summarisedNews, setSummarisedNews] = React.useState<string>();
     const [showSummary, setShowSummary] = React.useState(false);
+    const [provider, setProvider] = React.useState('OpenAI');
 
     const handleSummarise = () => {
         setLoading(true);
         api.post<{ summary: string }>('/api/news/summarise', {
             stock_code: stockCode,
             news: newsData,
+            provider: provider.toLowerCase(),
         })
             .then((response) => {
                 if (response.status === 200) {
@@ -33,7 +37,7 @@ const NewsSummariser = ({
                     throw new Error();
                 }
             })
-            .catch((e) => console.error('Error whiel summarising news', e))
+            .catch((e) => console.error('Error while summarising news', e))
             .finally(() => setLoading(false));
         // setSummarisedNews(`
         // Nvidia's stock has been garnering significant attention ahead of its annual software developer conference, where CEO Jensen Huang is expected to reveal details about the company's newest artificial intelligence chip. The AI leader's stock is wavering, facing a potential 'death cross,' often considered a bearish indicator. Despite this, Nvidia registered robust Q4 results, achieving $17.2 billion in revenue growth. Moreover, some analysts are upbeat that the conference could provide a boost to the company's stock. However, news suggests that Nvidia is experiencing a substantial decrease in its market cap, with losses exceeding $700 billion from its peak. Moreover, Huang will have to defend Nvidia's dominant position in AI, considering the growing competition. The ongoing tariff uncertainty, warned by Trump's advisor, is also a critical point of consideration for the stock's future movements. Meanwhile, Intel is in the spotlight, as its new CEO, Lip-Bu Tan, adopts cost-cutting measures and aims at boosting revenue. Tan is reportedly receiving lower base salary than his predecessor. He also plans significant changes at Intel, with an ambition to lead a turnaround with innovations and foundry expansion, prompting Intel's stock to rise. The financial market has a mixed reaction to the top tech stocks, with both Nvidia and Intel witnessing price movement. However, the semiconductor market's future seems set to remain dynamic with Nvidia's growth prospects and Intel's turnaround strategy under the new leadership. The timely announcements and strategies by both companies at their respective conferences will likely influence future investor sentiments
@@ -118,6 +122,10 @@ const NewsSummariser = ({
         // `);
     };
 
+    const toggleProvider = () => {
+        setProvider((prevProvider) => (prevProvider === 'OpenAI' ? 'DeepSeek' : 'OpenAI'));
+    };
+
     return (
         <Flex className="relative">
             {loading ? (
@@ -132,14 +140,31 @@ const NewsSummariser = ({
                     View Summary
                 </button>
             ) : (
-                <button
-                    onClick={handleSummarise}
-                    className="bg-blue-500 hover:bg-blue-600
-                  disabled:bg-gray-400 disabled:hover:bg-gray-400
-                  text-white font-bold py-2 px-4 rounded"
-                >
-                    Summarise <OpenAIOutlined />
-                </button>
+                <Flex gap="1rem">
+                    <Tooltip title={provider}>
+                        <Flex onClick={toggleProvider} className="cursor-pointer">
+                            {provider === 'OpenAI' ? (
+                                <OpenAIOutlined
+                                    className=" p-0 m-0 !text-white"
+                                    style={{ fontSize: 30 }}
+                                />
+                            ) : (
+                                <DeepSeek
+                                    className="h-full p-0 m-0 !text-white"
+                                    style={{ fontSize: 30 }}
+                                />
+                            )}
+                        </Flex>
+                    </Tooltip>
+                    <button
+                        onClick={handleSummarise}
+                        className="bg-blue-500 hover:bg-blue-600
+                                    disabled:bg-gray-400 disabled:hover:bg-gray-400
+                                    text-white font-bold py-2 px-4 rounded"
+                    >
+                        Summarise
+                    </button>
+                </Flex>
             )}
             {summarisedNews !== undefined && (
                 <NewsSummary
