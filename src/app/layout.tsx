@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 
 import '@ant-design/v5-patch-for-react-19';
 
-import './globals.css';
+import '@/styles/globals.css';
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
