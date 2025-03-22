@@ -13,6 +13,7 @@ export async function GET(req: Request) {
         const data = await response.json();
         return NextResponse.json(data);
     } catch (error) {
+        console.error(error);
         return NextResponse.json({ error: 'Error fetching data' }, { status: 500 });
     }
 }
