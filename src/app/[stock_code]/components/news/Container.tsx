@@ -70,8 +70,13 @@ const Page = ({ stock_code }: { stock_code: string }) => {
     return (
         <React.Fragment>
             {newsData.length > 0 ? (
-                <Flex vertical gap="1rem" align="center" className="max-h-[70vh] overflow-y-auto">
-                    <NewsSummariser newsData={newsData} />
+                <Flex
+                    vertical
+                    gap="1rem"
+                    align="center"
+                    className="max-h-[70vh] overflow-y-auto relative w-full"
+                >
+                    <NewsSummariser newsData={newsData} stock_code={stock_code}/>
                     <Collapse accordion items={items} size="large" />
                 </Flex>
             ) : (

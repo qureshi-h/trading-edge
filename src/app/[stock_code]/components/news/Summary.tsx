@@ -1,16 +1,20 @@
 import { useState, useEffect } from 'react';
 
 import Text from 'antd/es/typography/Text';
-import { Flex } from 'antd';
+import { Flex, Modal } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
+
+import '@/styles/modal.css';
 
 const NewsSummary = ({
     text,
     speed,
+    open,
     onClose,
 }: {
     text: string;
     speed: number;
+    open: boolean;
     onClose: () => void;
 }) => {
     const [displayedText, setDisplayedText] = useState('');
@@ -29,20 +33,16 @@ const NewsSummary = ({
     }, [text, speed]);
 
     return (
-        <Flex
-            className="h-screen w-screen z-10 bg-black/80 fixed top-0 left-0 px-28 pb-28"
-            vertical
-            align="flex-end"
-            style={{ top: 0, left: 0 }} // Ensure it starts at the viewport's top-left
+        <Modal
+            open={open}
+            className="!top-0 !w-[100vw] p-0 m-0 !max-w-none"
+            footer={null}
+            closeIcon={<CloseOutlined className="!text-white p-5" onClick={onClose} />}
         >
-            <CloseOutlined
-                className="!text-3xl !text-white py-14 cursor-pointer"
-                onClick={onClose}
-            />
-            <Flex align="center" className="w-full">
-                <Text className="!text-5xl !text-white">{displayedText}</Text>
+            <Flex className="py-28 px-5 !h-[100vh] w-full overflow-y-auto" vertical>
+                <Text className="!text-4xl !text-white whitespace-pre-line">{displayedText}</Text>
             </Flex>
-        </Flex>
+        </Modal>
     );
 };
 
