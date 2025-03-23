@@ -14,7 +14,11 @@ import '@/styles/collapse.css';
 interface PageProps {
     stockCode: string;
     newsData: NewsResponse[];
+    resize: (delay?: number) => void;
 }
+
+const RESIZE_STEP = 100; // ms
+const COLLAPSE_TRANSITION = 300; // ms
 
 const generateCollapseItems = (newsData: NewsResponse[]): CollapseProps['items'] => {
     return newsData.map((article: NewsResponse, index: number) => ({
@@ -43,17 +47,30 @@ const generateCollapseItems = (newsData: NewsResponse[]): CollapseProps['items']
                 <ExportOutlined className="!text-white hover:!text-blue-500" />
             </Link>
         ),
+        collapsible: article.image !== '' || article.summary !== '' ? 'icon' : 'disabled',
     }));
 };
 
 const EmptyState = () => (
-    <Flex className="w-full p-3" justify="center">
+    <Flex className="w-full p-5" justify="center">
         <Text className="!text-white">Nothing recent found!</Text>
     </Flex>
 );
 
-const NewsContainer: React.FC<PageProps> = ({ stockCode, newsData }) => {
+const NewsContainer: React.FC<PageProps> = ({ stockCode, newsData, resize }) => {
+    const [expandedRows, setExpandedRows] = React.useState<string[]>([]);
     const items = React.useMemo(() => generateCollapseItems(newsData), [newsData]);
+
+    const handleClick = (key: string[]) => {
+        if (expandedRows.length === 1 && key.length === 1 && expandedRows[0] === key[0]) {
+            return; // avoid resizing
+        }
+
+        setExpandedRows(key);
+        for (var i = 1; i <= COLLAPSE_TRANSITION / RESIZE_STEP; i++) {
+            resize(i * RESIZE_STEP);
+        }
+    };
 
     return (
         <React.Fragment>
@@ -65,7 +82,13 @@ const NewsContainer: React.FC<PageProps> = ({ stockCode, newsData }) => {
                     className="max-h-[70vh] overflow-y-auto w-full p-3"
                 >
                     <NewsSummariser newsData={newsData} stockCode={stockCode} />
-                    <Collapse accordion items={items} size="large" />
+                    <Collapse
+                        accordion
+                        items={items}
+                        size="large"
+                        onChange={handleClick}
+                        activeKey={expandedRows}
+                    />
                 </Flex>
             ) : (
                 <EmptyState />

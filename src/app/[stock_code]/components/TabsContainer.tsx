@@ -71,10 +71,13 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
         }
     };
 
-    useLayoutEffect(() => {
-        const timeout = setTimeout(() => {
+    const resize = (delay = 50) =>
+        setTimeout(() => {
             measureHeight();
-        }, 50);
+        }, delay);
+
+    useLayoutEffect(() => {
+        const timeout = resize();
 
         return () => clearTimeout(timeout);
     }, [activeTab, loading]);
@@ -157,7 +160,11 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
                                 animate={{ opacity: 1 }}
                                 transition={{ duration: animationDuration }}
                             >
-                                <NewsContainer stockCode={stockCode} newsData={newsData ?? []} />
+                                <NewsContainer
+                                    stockCode={stockCode}
+                                    newsData={newsData ?? []}
+                                    resize={resize}
+                                />
                             </motion.div>
                         )
                     )}
