@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Col } from 'antd';
+import { Col, Row } from 'antd';
 
 import PageContainer from '@/components/PageContainer';
 import TabsContainer from './components/TabsContainer';
@@ -35,39 +35,43 @@ const Page = async ({ params }: { params: Promise<{ stock_code: string }> }) => 
 
         return (
             <PageContainer>
-                <Col
-                    className="backdrop-blur-3xl rounded-xl p-5"
-                    span={12}
-                    xs={24}
-                    sm={24}
-                    md={16}
-                    lg={14}
-                    xl={10}
-                >
-                    <TabsContainer
-                        currentDate={currentDate}
-                        stockInfo={stockInfo}
-                        stockAnalysis={stockAnalysis}
-                        stockCode={stockCodeUpper}
-                    />
-                </Col>
+                <Row className="w-full" align={'middle'} justify={'center'}>
+                    <Col
+                        className="backdrop-blur-3xl rounded-xl p-5"
+                        span={12}
+                        xs={24}
+                        sm={24}
+                        md={16}
+                        lg={14}
+                        xl={10}
+                    >
+                        <TabsContainer
+                            currentDate={currentDate}
+                            stockInfo={stockInfo}
+                            stockAnalysis={stockAnalysis}
+                            stockCode={stockCodeUpper}
+                        />
+                    </Col>
+                </Row>
             </PageContainer>
         );
     } catch (error) {
         console.error('Error fetching data:', error);
         return (
             <PageContainer>
-                <Col
-                    className="backdrop-blur-3xl rounded-xl p-5"
-                    span={12}
-                    xs={24}
-                    sm={24}
-                    md={16}
-                    lg={14}
-                    xl={10}
-                >
-                    <p className="text-red-500">Failed to load data. Please try again later.</p>
-                </Col>
+                <Row>
+                    <Col
+                        className="backdrop-blur-3xl rounded-xl p-5"
+                        span={12}
+                        xs={24}
+                        sm={24}
+                        md={16}
+                        lg={14}
+                        xl={10}
+                    >
+                        <p className="text-red-500">Failed to load data. Please try again later.</p>
+                    </Col>
+                </Row>
             </PageContainer>
         );
     }

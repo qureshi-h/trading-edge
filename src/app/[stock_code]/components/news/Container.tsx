@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 
 import Text from 'antd/es/typography/Text';
@@ -22,8 +22,8 @@ const COLLAPSE_TRANSITION = 300; // ms
 
 const generateCollapseItems = (newsData: NewsResponse[]): CollapseProps['items'] => {
     return newsData.map((article: NewsResponse, index: number) => ({
-        key: index.toString(),
-        label: article.headline,
+        key: 'news-panel-' + index.toString(),
+        label: <Text id={'header-news-panel-' + index.toString()}>{article.headline}</Text>,
         children: (
             <Flex vertical align="center">
                 {article.image && (
@@ -47,7 +47,7 @@ const generateCollapseItems = (newsData: NewsResponse[]): CollapseProps['items']
                 <ExportOutlined className="!text-white hover:!text-blue-500" />
             </Link>
         ),
-        collapsible: article.image !== '' || article.summary !== '' ? 'icon' : 'disabled',
+        collapsible: article.image !== '' || article.summary !== '' ? 'header' : 'disabled',
     }));
 };
 
@@ -72,6 +72,22 @@ const NewsContainer: React.FC<PageProps> = ({ stockCode, newsData, resize }) => 
         }
     };
 
+    useEffect(() => {
+        const scrollCollapseContent = () => {
+            if (expandedRows.length > 0) {
+                const panelKey = expandedRows[0];
+                const panelElement = document.getElementById('header-' + panelKey);
+                if (panelElement) {
+                    panelElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+        };
+
+        const timeoutId = setTimeout(scrollCollapseContent, COLLAPSE_TRANSITION);
+
+        return () => clearTimeout(timeoutId);
+    }, [expandedRows]);
+
     return (
         <React.Fragment>
             {newsData.length > 0 ? (
@@ -88,6 +104,7 @@ const NewsContainer: React.FC<PageProps> = ({ stockCode, newsData, resize }) => 
                         size="large"
                         onChange={handleClick}
                         activeKey={expandedRows}
+                        className="w-full"
                     />
                 </Flex>
             ) : (
