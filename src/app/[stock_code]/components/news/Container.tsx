@@ -67,7 +67,7 @@ const NewsContainer: React.FC<PageProps> = ({ stockCode, newsData, resize }) => 
         }
 
         setExpandedRows(key);
-        for (var i = 1; i <= COLLAPSE_TRANSITION / RESIZE_STEP; i++) {
+        for (let i = 1; i <= COLLAPSE_TRANSITION / RESIZE_STEP; i++) {
             resize(i * RESIZE_STEP);
         }
     };

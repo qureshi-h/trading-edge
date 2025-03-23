@@ -80,7 +80,7 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
         const timeout = resize();
 
         return () => clearTimeout(timeout);
-    }, [activeTab, loading]);
+    }, [activeTab, loading, resize]);
 
     const handleTabChange = useCallback(
         async (activeKey: string) => {
