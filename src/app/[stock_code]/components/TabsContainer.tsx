@@ -3,7 +3,7 @@
 import React, { useState, useRef, useCallback, useLayoutEffect } from 'react';
 
 import Text from 'antd/es/typography/Text';
-import { Tabs, Spin, notification } from 'antd';
+import { Tabs, Spin, notification, Flex } from 'antd';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import StockInfo from './analysis/StockInfo';
@@ -65,16 +65,15 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
         }
     };
 
-    const measureHeight = () => {
-        if (contentRef.current) {
-            setContentHeight(contentRef.current.scrollHeight);
-        }
-    };
-
-    const resize = (delay = 50) =>
-        setTimeout(() => {
-            measureHeight();
-        }, delay);
+    const resize = useCallback(
+        (delay = 50) =>
+            setTimeout(() => {
+                if (contentRef.current) {
+                    setContentHeight(contentRef.current.scrollHeight);
+                }
+            }, delay),
+        [],
+    );
 
     useLayoutEffect(() => {
         const timeout = resize();
@@ -127,12 +126,17 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: animationDuration, delay: animationDuration }}
-                            className="p-5"
                         >
-                            <Spin aria-label="Loading" className="w-full" />
-                            <motion.div layout="position">
-                                <Text className="!text-white">Fetching Latest News...</Text>
-                            </motion.div>
+                            <Flex
+                                vertical
+                                className="p-5"
+                                align="center"
+                                justify="center"
+                                gap="1rem"
+                            >
+                                <Spin aria-label="Loading" className="w-full" />
+                                <Text className="">Fetching Latest News...</Text>
+                            </Flex>
                         </motion.div>
                     ) : activeTab === 'analysis' ? (
                         <motion.div
