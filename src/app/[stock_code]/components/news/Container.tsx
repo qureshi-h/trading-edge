@@ -23,17 +23,25 @@ const COLLAPSE_TRANSITION = 300; // ms
 const generateCollapseItems = (newsData: NewsResponse[]): CollapseProps['items'] => {
     return newsData.map((article: NewsResponse, index: number) => ({
         key: 'news-panel-' + index.toString(),
-        label: <Text id={'header-news-panel-' + index.toString()}>{article.headline}</Text>,
+        label: (
+            <Text
+                id={'header-news-panel-' + index.toString()}
+                className="text-sm sm:text-base"
+            >
+                {article.headline}
+            </Text>
+        ),
         children: (
             <Flex vertical align="center">
                 {article.image && (
                     <Image
                         src={article.image}
                         alt="article image"
-                        className="mb-5 mt-2 max-h-96 !w-auto"
+                        className="mb-5 mt-2 max-h-48 sm:max-h-96 !w-auto"
+                        preview={false}
                     />
                 )}
-                <Text className="!text-black">{article.summary}</Text>
+                <Text className="!text-black text-sm sm:text-base">{article.summary}</Text>
             </Flex>
         ),
         extra: (
@@ -41,7 +49,7 @@ const generateCollapseItems = (newsData: NewsResponse[]): CollapseProps['items']
                 href={article.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="ml-5"
+                className="ml-2 sm:ml-5"
                 aria-label="Open article in new tab"
             >
                 <ExportOutlined className="!text-white hover:!text-blue-500" />
@@ -52,8 +60,8 @@ const generateCollapseItems = (newsData: NewsResponse[]): CollapseProps['items']
 };
 
 const EmptyState = () => (
-    <Flex className="w-full p-5" justify="center">
-        <Text className="!text-white">Nothing recent found!</Text>
+    <Flex className="w-full p-3 sm:p-5" justify="center">
+        <Text className="!text-white text-sm sm:text-base">Nothing recent found!</Text>
     </Flex>
 );
 
@@ -93,9 +101,9 @@ const NewsContainer: React.FC<PageProps> = ({ stockCode, newsData, resize }) => 
             {newsData.length > 0 ? (
                 <Flex
                     vertical
-                    gap="1rem"
+                    gap="0.5rem"
                     align="center"
-                    className="max-h-[70vh] overflow-y-auto w-full p-3"
+                    className="max-h-[70vh] overflow-y-auto w-full p-2 sm:p-3"
                 >
                     <NewsSummariser newsData={newsData} stockCode={stockCode} />
                     <Collapse
@@ -104,7 +112,8 @@ const NewsContainer: React.FC<PageProps> = ({ stockCode, newsData, resize }) => 
                         size="large"
                         onChange={handleClick}
                         activeKey={expandedRows}
-                        className="w-full"
+                        className="!w-full"
+                        expandIconPosition="end"
                     />
                 </Flex>
             ) : (

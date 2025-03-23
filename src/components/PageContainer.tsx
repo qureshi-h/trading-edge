@@ -1,8 +1,8 @@
 import React, { useMemo, memo } from 'react';
-import Link from 'next/link';
+
 import { Flex, FloatButton } from 'antd';
 import { HomeFilled } from '@ant-design/icons';
-import Layout, { Content, Header } from 'antd/es/layout/layout';
+import Layout, { Content } from 'antd/es/layout/layout';
 
 interface PageContainerProps {
     children: React.ReactNode;
@@ -14,7 +14,7 @@ interface PageContainerProps {
     backgroundImage?: string;
 }
 
-const PageHeader = () => (
+const HomeButton = () => (
     <FloatButton
         icon={<HomeFilled />}
         type="primary"
@@ -51,7 +51,7 @@ const PageContainer: React.FC<PageContainerProps> = memo(
 
         return (
             <Layout className="min-h-full" hasSider={false}>
-                <PageHeader />
+                <HomeButton />
                 <Content>
                     <Flex
                         vertical={vertical}
@@ -67,5 +67,7 @@ const PageContainer: React.FC<PageContainerProps> = memo(
         );
     },
 );
+
+PageContainer.displayName = 'PageContainer';
 
 export default PageContainer;

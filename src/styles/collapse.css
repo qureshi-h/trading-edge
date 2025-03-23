@@ -1,3 +1,7 @@
 .ant-collapse-expand-icon {
     color: white !important;
 }
+
+.ant-collapse-header-text {
+    width: 80%;
+}
