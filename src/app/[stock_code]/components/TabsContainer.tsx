@@ -74,21 +74,21 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
     useLayoutEffect(() => {
         const timeout = setTimeout(() => {
             measureHeight();
-        }, 10);
+        }, 50);
 
         return () => clearTimeout(timeout);
     }, [activeTab, loading]);
 
     const handleTabChange = useCallback(
         async (activeKey: string) => {
-            if (activeKey === 'news') {
+            if (activeKey === 'news' && newsData === undefined) {
                 await fetchNewsData(stockCode);
                 setActiveTab(activeKey);
             } else {
                 setContentHeight(0);
                 setTimeout(() => {
                     setActiveTab(activeKey);
-                }, animationDuration * 1000);
+                }, animationDuration * 1100);
             }
         },
         [activeTab, newsData, stockCode],
