@@ -21,6 +21,7 @@ interface TabsContainerProps {
     stockCode: string;
 }
 
+const animationDuration = 0.5;
 const defaultTab = 'analysis';
 const tabItems = [
     { label: 'Analysis', key: 'analysis' },
@@ -80,12 +81,17 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
 
     const handleTabChange = useCallback(
         async (activeKey: string) => {
-            if (activeKey === 'news' && !newsData) {
+            if (activeKey === 'news') {
                 await fetchNewsData(stockCode);
+                setActiveTab(activeKey);
+            } else {
+                setContentHeight(0);
+                setTimeout(() => {
+                    setActiveTab(activeKey);
+                }, animationDuration * 1000);
             }
-            setActiveTab(activeKey);
         },
-        [newsData, stockCode],
+        [activeTab, newsData, stockCode],
     );
 
     return (
@@ -105,47 +111,56 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
             <motion.div
                 animate={{ height: contentHeight }}
                 initial={{ height: 0 }}
-                transition={{ duration: 0.5, ease: 'easeInOut' }}
-                className="overflow-hidden"
+                transition={{ duration: animationDuration, ease: 'easeInOut' }}
+                exit={{ height: 0 }}
                 layout
+                className="overflow-hidden"
             >
                 <AnimatePresence mode="wait">
-                    <motion.div
-                        key={activeTab}
-                        ref={contentRef}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.5 }}
-                    >
-                        {loading ? (
-                            <Flex
-                                vertical
-                                justify="center"
-                                align="center"
-                                gap="0.5rem"
-                                className="mb-1 h-fit w-full"
+                    {loading ? (
+                        <motion.div
+                            key="loading"
+                            ref={contentRef}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: animationDuration, delay: animationDuration }}
+                            className="p-5"
+                        >
+                            <Spin aria-label="Loading" className="w-full" />
+                            <motion.div layout="position">
+                                <Text className="!text-white">Fetching Latest News...</Text>
+                            </motion.div>
+                        </motion.div>
+                    ) : activeTab === 'analysis' ? (
+                        <motion.div
+                            key="analysis"
+                            ref={contentRef}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: animationDuration }}
+                        >
+                            <StockInfo
+                                stockInfo={stockInfo}
+                                plotImage={stockAnalysis?.image ?? null}
+                            />
+                            <StockReport
+                                stockCode={stockCode}
+                                defaultStockAnalyses={{ [currentDate]: stockAnalysis }}
+                            />
+                        </motion.div>
+                    ) : (
+                        activeTab === 'news' && (
+                            <motion.div
+                                key="news"
+                                ref={contentRef}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: animationDuration }}
                             >
-                                <Spin aria-label="Loading" className="w-full" />
-                                <motion.div layout="position">
-                                    <Text className="!text-white">Fetching Latest News...</Text>
-                                </motion.div>
-                            </Flex>
-                        ) : activeTab === 'analysis' ? (
-                            <React.Fragment>
-                                <StockInfo
-                                    stockInfo={stockInfo}
-                                    plotImage={stockAnalysis?.image ?? null}
-                                />
-                                <StockReport
-                                    stockCode={stockCode}
-                                    defaultStockAnalyses={{ [currentDate]: stockAnalysis }}
-                                />
-                            </React.Fragment>
-                        ) : (
-                            <NewsContainer stockCode={stockCode} newsData={newsData ?? []} />
-                        )}
-                    </motion.div>
+                                <NewsContainer stockCode={stockCode} newsData={newsData ?? []} />
+                            </motion.div>
+                        )
+                    )}
                 </AnimatePresence>
             </motion.div>
         </React.Fragment>
