@@ -1,17 +1,12 @@
 import React from 'react';
 
+import { Flex, Col } from 'antd';
 import CountUp from 'react-countup';
 import Text from 'antd/es/typography/Text';
-import { Flex, Col, Statistic, StatisticProps } from 'antd';
 
 import { StockAnalysis } from '@/types/stocks';
-import { getColorClassFromRange } from '@/utils/colour';
-
 import { analysisRanges } from '@/utils/constants';
-
-const formatter: StatisticProps['formatter'] = (value) => (
-    <CountUp end={value as number} separator="," />
-);
+import { getColorClassFromRange } from '@/utils/colour';
 
 const Panel3 = ({ stockAnalysis }: { stockAnalysis: StockAnalysis }) => (
     <Col
