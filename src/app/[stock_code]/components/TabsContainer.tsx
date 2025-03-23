@@ -5,7 +5,6 @@ import React, { useState, useRef, useCallback, useLayoutEffect } from 'react';
 import Text from 'antd/es/typography/Text';
 import { Tabs, Flex, notification, Spin } from 'antd';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ErrorBoundary } from 'react-error-boundary';
 
 import StockInfo from './analysis/StockInfo';
 import StockReport from './analysis/StockReport';
@@ -83,7 +82,6 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
         async (activeKey: string) => {
             if (activeKey === 'news' && !newsData) {
                 await fetchNewsData(stockCode);
-                measureHeight();
             }
             setActiveTab(activeKey);
         },
@@ -91,7 +89,7 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
     );
 
     return (
-        <>
+        <React.Fragment>
             <Tabs
                 defaultActiveKey={defaultTab}
                 activeKey={activeTab}
@@ -106,39 +104,33 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
 
             <motion.div
                 animate={{ height: contentHeight }}
+                initial={{ height: 0 }}
                 transition={{ duration: 0.5, ease: 'easeInOut' }}
                 className="overflow-hidden"
+                layout
             >
-                <AnimatePresence mode="sync">
+                <AnimatePresence mode="wait">
                     <motion.div
                         key={activeTab}
                         ref={contentRef}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        exit={{
-                            opacity: 0,
-                            transition: { duration: 0.5 },
-                        }}
+                        exit={{ opacity: 0 }}
                         transition={{ duration: 0.5 }}
                     >
                         {loading ? (
-                            <motion.div
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                transition={{ duration: 0.5, ease: 'anticipate' }}
+                            <Flex
+                                vertical
+                                justify="center"
+                                align="center"
+                                gap="0.5rem"
+                                className="mb-1 h-fit w-full"
                             >
-                                <Flex
-                                    vertical
-                                    justify="center"
-                                    align="center"
-                                    gap="0.5rem"
-                                    className="mb-1 h-fit w-full"
-                                >
-                                    <Spin aria-label="Loading" className="w-full" />
+                                <Spin aria-label="Loading" className="w-full" />
+                                <motion.div layout="position">
                                     <Text className="!text-white">Fetching Latest News...</Text>
-                                </Flex>
-                            </motion.div>
+                                </motion.div>
+                            </Flex>
                         ) : activeTab === 'analysis' ? (
                             <React.Fragment>
                                 <StockInfo
@@ -156,7 +148,7 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
                     </motion.div>
                 </AnimatePresence>
             </motion.div>
-        </>
+        </React.Fragment>
     );
 };
 

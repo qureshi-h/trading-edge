@@ -14,7 +14,7 @@ export async function GET(req: Request) {
         return new Promise<NextResponse>((resolve) => {
             setTimeout(() => {
                 resolve(NextResponse.json(newsData));
-            }, 10000);
+            }, 1000);
         });
     }
 
