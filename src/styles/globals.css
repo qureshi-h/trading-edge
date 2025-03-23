@@ -33,7 +33,7 @@ body {
 }
 
 .ant-btn:disabled {
-    color: rgb(198, 195, 195);
+    background-color: rgb(140, 138, 138) !important;
 }
 
 .inherit-font-size * > .ant-typography {
