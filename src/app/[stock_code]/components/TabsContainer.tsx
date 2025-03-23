@@ -3,7 +3,7 @@
 import React, { useState, useRef, useCallback, useLayoutEffect } from 'react';
 
 import Text from 'antd/es/typography/Text';
-import { Tabs, Flex, notification, Spin } from 'antd';
+import { Tabs, Spin, notification } from 'antd';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import StockInfo from './analysis/StockInfo';
@@ -91,7 +91,7 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
                 }, animationDuration * 1100);
             }
         },
-        [activeTab, newsData, stockCode],
+        [newsData, stockCode],
     );
 
     return (
