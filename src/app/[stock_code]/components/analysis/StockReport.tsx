@@ -3,15 +3,14 @@
 import dayjs from 'dayjs';
 import React, { Suspense } from 'react';
 import Text from 'antd/es/typography/Text';
-import { Tabs, Spin, Flex, Row, Col, Tooltip } from 'antd';
+import { Tabs, Spin, Flex, Row } from 'antd';
 
 import { StockAnalysis } from '@/types/stocks';
 import { fetchStockAnalysis } from '@/utils/api/analysis';
-import { getColorClassFromRange } from '@/utils/colour';
 import { getDatesExcludingWeekends } from '@/utils/dates';
-
-import { analysisRanges } from '@/utils/constants';
-import { InfoCircleOutlined } from '@ant-design/icons';
+import Panel1 from './Panels/Panel_1';
+import Panel2 from './Panels/Panel_2';
+import Panel3 from './Panels/Panel_3';
 
 const TabContent = ({
     stockCode,
@@ -67,209 +66,9 @@ const TabContent = ({
             className="-size !h-full items-stretch"
             align="top"
         >
-            {/* Panel 1 */}
-            <Col
-                className="!p-5 text-base border-gray-500 border-2 flex-grow"
-                xs={24}
-                sm={24}
-                md={12}
-                lg={8}
-            >
-                <Flex vertical>
-                    <Text>
-                        <strong>Close Price: </strong>
-                        {stockAnalysis.close_price}
-                    </Text>
-                    {stockAnalysis.breakout_percentage !== null ? (
-                        <>
-                            <Text>
-                                <strong>Breakout Percentage: </strong>
-                                <Text
-                                    className={getColorClassFromRange(
-                                        stockAnalysis.breakout_percentage,
-                                        analysisRanges.breakout_percentage.low,
-                                        analysisRanges.breakout_percentage.high,
-                                    )}
-                                >
-                                    {stockAnalysis.breakout_percentage}%{' '}
-                                </Text>
-                                <Tooltip title="The breakout percentage measures how much the current closing price exceeds the trendline value. A higher value indicates a stronger bullish breakout.">
-                                    <InfoCircleOutlined />{' '}
-                                </Tooltip>
-                            </Text>
-                            <Text>
-                                <strong>Consecutive Days Above Trendline: </strong>
-                                <Text
-                                    className={
-                                        stockAnalysis.consecutive_days_above_trendline > 1
-                                            ? getColorClassFromRange(
-                                                  stockAnalysis.consecutive_days_above_trendline,
-                                                  -1,
-                                                  7,
-                                              )
-                                            : 'text-gray-500'
-                                    }
-                                >
-                                    {stockAnalysis.consecutive_days_above_trendline}{' '}
-                                </Text>
-                                <Tooltip title="Consecutive days above the trendline represent the number of trading days the stock's closing price has remained above the trendline without interruption. It indicates sustained bullish momentum.">
-                                    <InfoCircleOutlined />{' '}
-                                </Tooltip>
-                            </Text>
-                            <Text>
-                                <strong>Trendline Accuracy: </strong>
-                                <Text
-                                    className={getColorClassFromRange(
-                                        stockAnalysis.trendline_accuracy,
-                                        0,
-                                        100,
-                                    )}
-                                >
-                                    {stockAnalysis.trendline_accuracy}%{' '}
-                                </Text>
-                                <Tooltip title="Trendline reliability measures how accurately the trendline represents the stock's peaks, expressed as a percentage. Higher reliability indicates a better fit.">
-                                    <InfoCircleOutlined />{' '}
-                                </Tooltip>
-                            </Text>
-                        </>
-                    ) : (
-                        <Text className="!my-2 !text-gray-300">Breakout data unavailable</Text>
-                    )}
-                </Flex>
-            </Col>
-
-            {/* Panel 2 */}
-            <Col
-                className="!p-5 text-base border-gray-500 border-2 flex-grow"
-                xs={24}
-                sm={24}
-                md={12}
-                lg={8}
-            >
-                <Flex vertical>
-                    <Text>
-                        <strong>RSI Value: </strong>
-                        <Text
-                            className={getColorClassFromRange(
-                                stockAnalysis.rsi_value,
-                                0,
-                                100,
-                                true,
-                            )}
-                        >
-                            {stockAnalysis.rsi_value}
-                        </Text>
-                    </Text>
-                    <Text>
-                        <strong>MACD Value: </strong>
-                        <Text
-                            className={getColorClassFromRange(stockAnalysis.macd_value, -100, 100)}
-                        >
-                            {stockAnalysis.macd_value}
-                        </Text>
-                    </Text>
-                    <Text>
-                        <strong>MACD Signal: </strong>
-                        <Text
-                            className={getColorClassFromRange(stockAnalysis.macd_signal, -100, 100)}
-                        >
-                            {stockAnalysis.macd_signal}
-                        </Text>
-                    </Text>
-                    <Text>
-                        <strong>Upper Bollinger Band: </strong>
-                        {stockAnalysis.upper_bollinger_band}
-                    </Text>
-                    <Text>
-                        <strong>Middle Bollinger Band: </strong>
-                        {stockAnalysis.middle_bollinger_band}
-                    </Text>
-                    <Text>
-                        <strong>Lower Bollinger Band: </strong>
-                        {stockAnalysis.lower_bollinger_band}
-                    </Text>
-                </Flex>
-            </Col>
-
-            {/* Panel 3 */}
-            <Col
-                className="!p-5 text-base border-gray-500 border-2 flex-grow"
-                xs={24}
-                sm={24}
-                md={12}
-                lg={8}
-            >
-                <Flex vertical>
-                    <Text>
-                        <strong>Volume: </strong>
-                        {stockAnalysis.volume}
-                    </Text>
-                    <Text>
-                        <strong>Volume Ratio: </strong>
-                        <Text
-                            className={getColorClassFromRange(
-                                stockAnalysis.volume_ratio,
-                                analysisRanges.volume_ratio.low,
-                                analysisRanges.volume_ratio.high,
-                            )}
-                        >
-                            {stockAnalysis.volume_ratio}
-                        </Text>
-                    </Text>
-                    <Text>
-                        <strong>9 EMA: </strong>
-                        <Text
-                            className={getColorClassFromRange(
-                                stockAnalysis.nine_ema,
-                                stockAnalysis.close_price * 0.8,
-                                stockAnalysis.close_price * 1.2,
-                                true,
-                            )}
-                        >
-                            {stockAnalysis.nine_ema}
-                        </Text>
-                    </Text>
-                    <Text>
-                        <strong>12 EMA: </strong>
-                        <Text
-                            className={getColorClassFromRange(
-                                stockAnalysis.twelve_ema,
-                                stockAnalysis.close_price * 0.8,
-                                stockAnalysis.close_price * 1.2,
-                                true,
-                            )}
-                        >
-                            {stockAnalysis.twelve_ema}
-                        </Text>
-                    </Text>
-                    <Text>
-                        <strong>21 EMA: </strong>
-                        <Text
-                            className={getColorClassFromRange(
-                                stockAnalysis.twenty_one_ema,
-                                stockAnalysis.close_price * 0.8,
-                                stockAnalysis.close_price * 1.2,
-                                true,
-                            )}
-                        >
-                            {stockAnalysis.twenty_one_ema}
-                        </Text>
-                    </Text>
-                    <Text>
-                        <strong>50 EMA: </strong>
-                        <Text
-                            className={getColorClassFromRange(
-                                stockAnalysis.fifty_ema,
-                                stockAnalysis.close_price * 0.8,
-                                stockAnalysis.close_price * 1.2,
-                                true,
-                            )}
-                        >
-                            {stockAnalysis.fifty_ema}
-                        </Text>
-                    </Text>
-                </Flex>
-            </Col>
+            <Panel1 stockAnalysis={stockAnalysis} />
+            <Panel2 stockAnalysis={stockAnalysis} />
+            <Panel3 stockAnalysis={stockAnalysis} />
         </Row>
     );
 };
@@ -287,7 +86,6 @@ const StockReport = ({ defaultStockAnalyses, stockCode }: StockReportProps) => {
     }>(defaultStockAnalyses);
     const dates = getDatesExcludingWeekends(7);
 
-    // Update the cached data if a new stock analysis is fetched
     const updateCachedAnalysis = (date: string, analysis: StockAnalysis | null) => {
         setCachedAnalyses((prevState) => ({
             ...prevState,
@@ -295,20 +93,24 @@ const StockReport = ({ defaultStockAnalyses, stockCode }: StockReportProps) => {
         }));
     };
 
-    const tabItems = dates.map((date, index) => ({
-        key: index.toString(),
-        label: index === 0 ? 'Today' : dayjs(date).format('DD MMM'),
-        children: (
-            <Suspense fallback={<Spin tip="Loading..." />}>
-                <TabContent
-                    stockCode={stockCode}
-                    date={date}
-                    cachedData={cachedAnalyses}
-                    updateCachedAnalysis={updateCachedAnalysis}
-                />
-            </Suspense>
-        ),
-    }));
+    const tabItems = React.useMemo(
+        () =>
+            dates.map((date, index) => ({
+                key: index.toString(),
+                label: index === 0 ? 'Today' : dayjs(date).format('DD MMM'),
+                children: (
+                    <Suspense fallback={<Spin tip="Loading..." />}>
+                        <TabContent
+                            stockCode={stockCode}
+                            date={date}
+                            cachedData={cachedAnalyses}
+                            updateCachedAnalysis={updateCachedAnalysis}
+                        />
+                    </Suspense>
+                ),
+            })),
+        [dates, stockCode, cachedAnalyses],
+    );
 
     return (
         <Flex vertical justify="center" className="mx-2 lg:mx-3">
@@ -317,6 +119,7 @@ const StockReport = ({ defaultStockAnalyses, stockCode }: StockReportProps) => {
                 tabPosition="top"
                 items={tabItems}
                 className="custom-tabs mx-2 lg:mx-3"
+                aria-label="Stock Report Tabs"
             />
         </Flex>
     );

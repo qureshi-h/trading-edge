@@ -52,7 +52,7 @@ const EmptyState = () => (
     </Flex>
 );
 
-const Page: React.FC<PageProps> = ({ stockCode, newsData }) => {
+const NewsContainer: React.FC<PageProps> = ({ stockCode, newsData }) => {
     const items = React.useMemo(() => generateCollapseItems(newsData), [newsData]);
 
     return (
@@ -74,4 +74,4 @@ const Page: React.FC<PageProps> = ({ stockCode, newsData }) => {
     );
 };
 
-export default Page;
+export default NewsContainer;
