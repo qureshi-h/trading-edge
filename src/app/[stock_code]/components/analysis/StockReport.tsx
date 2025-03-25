@@ -143,5 +143,6 @@ const TabContent = React.memo(
     },
 );
 
-StockReport.displayName = 'StockReport';
+TabContent.displayName = 'TabContent';
+
 export default StockReport;
