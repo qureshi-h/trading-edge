@@ -17,6 +17,7 @@ interface NewsSummariserProps {
 }
 
 const NewsSummariser: React.FC<NewsSummariserProps> = ({ stockCode, newsData }) => {
+    const [api, contextHolder] = notification.useNotification();
     const { loading, summarisedNews, summarise } = useSummariseNews();
 
     const [showSummary, setShowSummary] = React.useState(false);
@@ -26,19 +27,25 @@ const NewsSummariser: React.FC<NewsSummariserProps> = ({ stockCode, newsData }) 
 
     const handleSummarise = React.useCallback(() => {
         if (!newsData || newsData.length === 0) {
-            notification.warning({
+            api.warning({
                 message: 'No News Data',
                 description: 'There is no news data to summarise.',
             });
             return;
         }
-        summarise(stockCode, newsData, provider).then((success) => {
-            if (success) {
+        summarise(stockCode, newsData, provider).then((status) => {
+            if (status === 200) {
                 setShowSummary(true);
+            } else if (status === 429) {
+                api.info({
+                    message: 'Rate Limit Reached',
+                    description: 'Please try again shortly.',
+                });
             } else {
-                notification.error({
+                api.error({
                     message: 'Summarisation Failed',
-                    description: 'An error occurred while summarising the news.',
+                    description:
+                        'An error occurred while summarising the news. Please try again later.',
                 });
             }
         });
@@ -50,12 +57,11 @@ const NewsSummariser: React.FC<NewsSummariserProps> = ({ stockCode, newsData }) 
         );
     }, []);
 
-    console.log({ summarisedNews });
-
     return (
         <Flex className="summariser-container">
+            {contextHolder}
             {loading ? (
-                <Spin aria-label="Loading" />
+                <Spin aria-label="Loading" className="py-3" />
             ) : hasSummary ? (
                 <Button
                     onClick={() => setShowSummary(true)}

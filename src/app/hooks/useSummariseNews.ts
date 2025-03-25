@@ -23,7 +23,7 @@ export const useSummariseNews = () => {
         stockCode: string,
         newsData: NewsResponse[],
         provider: AIProvider,
-    ): Promise<boolean> => {
+    ): Promise<number> => {
         setLoading(true);
 
         if (testingMode) {
@@ -31,28 +31,37 @@ export const useSummariseNews = () => {
                 setTimeout(() => {
                     setSummarisedNews(newsSummary);
                     setLoading(false);
-                    resolve(true);
+                    resolve(200);
                 }, 1000);
             });
         }
 
         try {
-            const response = await api.post<{ summary: string }>('/api/news/summarise', {
-                stock_code: stockCode,
-                news: newsData,
-                provider: provider.toLowerCase(),
-            });
+            const response = await api.post<{ summary: string }>(
+                '/api/news/summarise',
+                {
+                    stock_code: stockCode,
+                    news: newsData,
+                    provider: provider.toLowerCase(),
+                },
+                undefined,
+                undefined,
+                20000, // timeout
+            );
 
             if (response.status === 200) {
                 setSummarisedNews(response.data.summary);
-                return true;
+                return response.status;
+            }
+            if (response.status === 429) {
+                return response.status;
             }
 
             console.error('Unexpected status code:', response.status);
-            return false;
+            return response.status;
         } catch (e) {
             console.error('Error while summarising news:', e);
-            return false;
+            return 500;
         } finally {
             setLoading(false);
         }

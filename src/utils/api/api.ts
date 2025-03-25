@@ -15,26 +15,73 @@ export interface ApiParams {
     [key: string]: string | number | boolean | GenericObject;
 }
 
+export interface ApiError {
+    status: number;
+    message: string;
+    details?: string;
+}
+
+type FetchError = Error & {
+    name: string;
+    status?: number;
+    message: string;
+};
+
+const DEFAULT_TIMEOUT = 10000;
+
 export const api = {
     get: async <T>(
         endpoint: string,
         params: ApiParams = {},
         customHeaders: HeadersInit = {},
         apiUrl: string = API_URL,
+        timeout: number = DEFAULT_TIMEOUT,
     ): Promise<ApiResponse<T>> => {
-        const url = new URL(endpoint, apiUrl);
-        Object.keys(params).forEach((key) => url.searchParams.append(key, String(params[key])));
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeout);
 
-        const response = await fetch(url.toString(), {
-            method: 'GET',
-            headers: {
-                // 'Content-Type': 'application/json',
-                ...customHeaders,
-            },
-        });
+        try {
+            const url = new URL(endpoint, apiUrl);
+            Object.keys(params).forEach((key) => url.searchParams.append(key, String(params[key])));
 
-        const data = await response.json();
-        return { data, status: response.status };
+            const response = await fetch(url.toString(), {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...customHeaders,
+                },
+                signal: controller.signal,
+            });
+
+            clearTimeout(timeoutId);
+
+            const data = await response.json();
+            return {
+                data,
+                status: response.status,
+            };
+        } catch (error: unknown) {
+            clearTimeout(timeoutId);
+
+            // Type guard for Error
+            const isError = (e: unknown): e is FetchError => e instanceof Error;
+
+            if (isError(error)) {
+                if (error.name === 'AbortError') {
+                    throw {
+                        status: 408,
+                        message: 'Request timeout',
+                        details: `Request took longer than ${timeout}ms`,
+                    } satisfies ApiError;
+                }
+            }
+
+            throw {
+                status: 500,
+                message: 'Network error',
+                details: isError(error) ? error.message : 'Unknown error occurred',
+            } satisfies ApiError;
+        }
     },
 
     post: async <T>(
@@ -42,17 +89,49 @@ export const api = {
         body: object,
         customHeaders: HeadersInit = {},
         apiUrl: string = API_URL,
+        timeout: number = DEFAULT_TIMEOUT,
     ): Promise<ApiResponse<T>> => {
-        const response = await fetch(new URL(endpoint, apiUrl).toString(), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                ...customHeaders,
-            },
-            body: JSON.stringify(body),
-        });
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeout);
 
-        const data = await response.json();
-        return { data, status: response.status };
+        try {
+            const response = await fetch(new URL(endpoint, apiUrl).toString(), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...customHeaders,
+                },
+                body: JSON.stringify(body),
+                signal: controller.signal,
+            });
+
+            clearTimeout(timeoutId);
+
+            const data = await response.json();
+            return {
+                data,
+                status: response.status,
+            };
+        } catch (error: unknown) {
+            clearTimeout(timeoutId);
+
+            const isError = (e: unknown): e is FetchError => e instanceof Error;
+
+            if (isError(error)) {
+                if (error.name === 'AbortError') {
+                    throw {
+                        status: 408,
+                        message: 'Request timeout',
+                        details: `Request took longer than ${timeout}ms`,
+                    } satisfies ApiError;
+                }
+            }
+
+            throw {
+                status: 500,
+                message: 'Network error',
+                details: isError(error) ? error.message : 'Unknown error occurred',
+            } satisfies ApiError;
+        }
     },
 };

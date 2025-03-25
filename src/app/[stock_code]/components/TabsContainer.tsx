@@ -33,6 +33,7 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
     const [activeTab, setActiveTab] = useState(defaultTab);
     const [loading, setLoading] = useState<boolean>(false);
     const [newsData, setNewsData] = useState<NewsResponse[]>();
+    const [api, contextHolder] = notification.useNotification();
 
     const tabItems = [
         {
@@ -56,32 +57,34 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
         },
     ];
 
-    const fetchNewsData = async (stockCode: string) => {
-        setLoading(true);
-        try {
-            const today = new Date();
-            const yesterday = new Date(today);
-            yesterday.setDate(today.getDate() - 1);
-
-            const to = getDateFormatted(today);
-            const from = getDateFormatted(yesterday);
-
-            const res = await fetch(`/api/company-news?symbol=${stockCode}&from=${from}&to=${to}`);
-            const data = await res.json();
-
-            if ('error' in data) throw new Error(data.error);
-
-            setNewsData(data as NewsResponse[]);
-        } catch (error) {
-            console.error(error);
-            notification.error({ message: `Error fetching news for ${stockCode}` });
-        } finally {
-            setLoading(false);
-        }
-    };
-
     const handleTabChange = useCallback(
         async (activeKey: string) => {
+            const fetchNewsData = async (stockCode: string) => {
+                setLoading(true);
+                try {
+                    const today = new Date();
+                    const yesterday = new Date(today);
+                    yesterday.setDate(today.getDate() - 1);
+
+                    const to = getDateFormatted(today);
+                    const from = getDateFormatted(yesterday);
+
+                    const res = await fetch(
+                        `/api/company-news?symbol=${stockCode}&from=${from}&to=${to}`,
+                    );
+                    const data = await res.json();
+
+                    if ('error' in data) throw new Error(data.error);
+
+                    setNewsData(data as NewsResponse[]);
+                } catch (error) {
+                    console.error(error);
+                    api.error({ message: `Error fetching news for ${stockCode}` });
+                } finally {
+                    setLoading(false);
+                }
+            };
+
             if (activeKey === 'news' && newsData === undefined) {
                 await fetchNewsData(stockCode);
                 setActiveTab(activeKey);
@@ -94,6 +97,7 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
 
     return (
         <React.Fragment>
+            {contextHolder}
             <Tabs
                 defaultActiveKey={defaultTab}
                 activeKey={activeTab}
