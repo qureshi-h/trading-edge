@@ -22,7 +22,7 @@ interface StockReportProps {
     stockCode: string;
 }
 
-const StockReport = ({ defaultStockAnalyses, stockCode }: StockReportProps) => {
+export default function StockReport({ defaultStockAnalyses, stockCode }: StockReportProps) {
     const dates = getDatesExcludingWeekends(7);
     const [activeTab, setActiveTab] = React.useState('0');
     const [loading, setLoading] = React.useState<boolean>(false);
@@ -88,7 +88,7 @@ const StockReport = ({ defaultStockAnalyses, stockCode }: StockReportProps) => {
             </AnimatePresence>
         </Flex>
     );
-};
+}
 
 const TabContent = React.memo(
     ({
@@ -146,5 +146,3 @@ const TabContent = React.memo(
         );
     },
 );
-
-export default StockReport;
