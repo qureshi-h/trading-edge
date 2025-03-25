@@ -1,7 +1,7 @@
 'use client';
 
 import dayjs from 'dayjs';
-import React, { Suspense } from 'react';
+import React, { Suspense, useCallback } from 'react';
 import Text from 'antd/es/typography/Text';
 import { Tabs, Spin, Flex, Row } from 'antd';
 
@@ -39,6 +39,11 @@ const StockReport = ({ defaultStockAnalyses, stockCode }: StockReportProps) => {
         [],
     );
 
+    // Wrapped setLoading in useCallback
+    const handleSetLoading = useCallback((isLoading: boolean) => {
+        setLoading(isLoading);
+    }, []);
+
     const tabItems = React.useMemo(
         () =>
             dates.map((date, index) => ({
@@ -50,13 +55,13 @@ const StockReport = ({ defaultStockAnalyses, stockCode }: StockReportProps) => {
                             date={date}
                             stockCode={stockCode}
                             cachedData={cachedAnalyses}
-                            setLoading={setLoading}
+                            setLoading={handleSetLoading} // Updated to use the memoized version
                             updateCachedAnalysis={updateCachedAnalysis}
                         />
                     </Suspense>
                 ),
             })),
-        [dates, stockCode, cachedAnalyses, updateCachedAnalysis],
+        [dates, stockCode, cachedAnalyses, updateCachedAnalysis, handleSetLoading], // Added handleSetLoading to dependencies
     );
 
     return (
@@ -94,7 +99,7 @@ interface TabContentProps {
     date: string;
     stockCode: string;
     cachedData: Record<string, StockAnalysis | null>;
-    setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+    setLoading: (loading: boolean) => void;
     updateCachedAnalysis: (date: string, analysis: StockAnalysis | null) => void;
 }
 
@@ -117,7 +122,7 @@ const TabContent = React.memo(
                 };
                 loadStockAnalysis();
             }
-        }, [stockCode, date, cachedData, updateCachedAnalysis]);
+        }, [stockCode, date, cachedData, updateCachedAnalysis, setLoading]);
 
         if (!stockAnalysis) {
             return (
