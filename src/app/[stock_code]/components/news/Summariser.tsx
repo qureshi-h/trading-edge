@@ -58,10 +58,10 @@ const NewsSummariser: React.FC<NewsSummariserProps> = ({ stockCode, newsData }) 
     }, []);
 
     return (
-        <Flex className="summariser-container">
+        <Flex className="summariser-container my-3">
             {contextHolder}
             {loading ? (
-                <Spin aria-label="Loading" className="py-3" />
+                <Spin aria-label="Loading" />
             ) : hasSummary ? (
                 <Button
                     onClick={() => setShowSummary(true)}
