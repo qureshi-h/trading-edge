@@ -22,7 +22,7 @@ interface StockReportProps {
     stockCode: string;
 }
 
-export default function StockReport({ defaultStockAnalyses, stockCode }: StockReportProps) {
+const StockReport = ({ defaultStockAnalyses, stockCode }: StockReportProps) => {
     const dates = getDatesExcludingWeekends(7);
     const [activeTab, setActiveTab] = React.useState('0');
     const [loading, setLoading] = React.useState<boolean>(false);
@@ -88,22 +88,18 @@ export default function StockReport({ defaultStockAnalyses, stockCode }: StockRe
             </AnimatePresence>
         </Flex>
     );
+};
+
+interface TabContentProps {
+    date: string;
+    stockCode: string;
+    cachedData: Record<string, StockAnalysis | null>;
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+    updateCachedAnalysis: (date: string, analysis: StockAnalysis | null) => void;
 }
 
 const TabContent = React.memo(
-    ({
-        date,
-        stockCode,
-        cachedData,
-        setLoading,
-        updateCachedAnalysis,
-    }: {
-        date: string;
-        stockCode: string;
-        cachedData: Record<string, StockAnalysis | null>;
-        setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-        updateCachedAnalysis: (date: string, analysis: StockAnalysis | null) => void;
-    }) => {
+    ({ date, stockCode, cachedData, setLoading, updateCachedAnalysis }: TabContentProps) => {
         const [stockAnalysis, setStockAnalysis] = React.useState<StockAnalysis | null>(
             cachedData[date] ?? null,
         );
@@ -146,3 +142,6 @@ const TabContent = React.memo(
         );
     },
 );
+
+StockReport.displayName = 'StockReport';
+export default StockReport;
