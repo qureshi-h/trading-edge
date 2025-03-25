@@ -44,7 +44,7 @@ const StockReport = ({ defaultStockAnalyses, stockCode }: StockReportProps) => {
             dates.map((date, index) => ({
                 key: index.toString(),
                 label: index === 0 ? 'Today' : dayjs(date).format('DD MMM'),
-                items: (
+                content: (
                     <Suspense fallback={<Spin tip="Loading..." />}>
                         <TabContent
                             date={date}
@@ -81,7 +81,7 @@ const StockReport = ({ defaultStockAnalyses, stockCode }: StockReportProps) => {
                     tabItems.map(
                         (item) =>
                             activeTab === item.key && (
-                                <AnimatedContainer key={item.key}>{item.items}</AnimatedContainer>
+                                <AnimatedContainer key={item.key}>{item.content}</AnimatedContainer>
                             ),
                     )
                 )}

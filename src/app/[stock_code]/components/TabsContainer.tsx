@@ -38,7 +38,7 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
         {
             label: 'Analysis',
             key: 'analysis',
-            items: (
+            content: (
                 <React.Fragment>
                     {' '}
                     <StockInfo stockInfo={stockInfo} plotImage={stockAnalysis?.image ?? null} />
@@ -52,7 +52,7 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
         {
             label: 'News',
             key: 'news',
-            items: <NewsContainer stockCode={stockCode} newsData={newsData ?? []} />,
+            content: <NewsContainer stockCode={stockCode} newsData={newsData ?? []} />,
         },
     ];
 
@@ -118,16 +118,7 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
                     tabItems.map(
                         (item) =>
                             activeTab === item.key && (
-                                <AnimatedContainer key={item.key}>
-                                    <StockInfo
-                                        stockInfo={stockInfo}
-                                        plotImage={stockAnalysis?.image ?? null}
-                                    />
-                                    <StockReport
-                                        stockCode={stockCode}
-                                        defaultStockAnalyses={{ [currentDate]: stockAnalysis }}
-                                    />
-                                </AnimatedContainer>
+                                <AnimatedContainer key={item.key}>{item.content}</AnimatedContainer>
                             ),
                     )
                 )}
