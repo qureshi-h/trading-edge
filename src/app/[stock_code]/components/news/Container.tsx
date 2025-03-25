@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Text from 'antd/es/typography/Text';
 import { Collapse, Flex, Image } from 'antd';
 import { ExportOutlined } from '@ant-design/icons';
+
 import NewsSummariser from './Summariser';
 
 import type { CollapseProps } from 'antd';
@@ -11,23 +12,18 @@ import { NewsResponse } from '@/types/news';
 
 import '@/styles/collapse.css';
 
-interface PageProps {
+interface NewsContainerProps {
     stockCode: string;
     newsData: NewsResponse[];
-    resize: (delay?: number) => void;
 }
 
-const RESIZE_STEP = 100; // ms
 const COLLAPSE_TRANSITION = 300; // ms
 
 const generateCollapseItems = (newsData: NewsResponse[]): CollapseProps['items'] => {
     return newsData.map((article: NewsResponse, index: number) => ({
         key: 'news-panel-' + index.toString(),
         label: (
-            <Text
-                id={'header-news-panel-' + index.toString()}
-                className="text-sm sm:text-base"
-            >
+            <Text id={'header-news-panel-' + index.toString()} className="text-sm sm:text-base">
                 {article.headline}
             </Text>
         ),
@@ -65,19 +61,12 @@ const EmptyState = () => (
     </Flex>
 );
 
-const NewsContainer: React.FC<PageProps> = ({ stockCode, newsData, resize }) => {
+const NewsContainer: React.FC<NewsContainerProps> = ({ stockCode, newsData }) => {
     const [expandedRows, setExpandedRows] = React.useState<string[]>([]);
     const items = React.useMemo(() => generateCollapseItems(newsData), [newsData]);
 
     const handleClick = (key: string[]) => {
-        if (expandedRows.length === 1 && key.length === 1 && expandedRows[0] === key[0]) {
-            return; // avoid resizing
-        }
-
         setExpandedRows(key);
-        for (let i = 1; i <= COLLAPSE_TRANSITION / RESIZE_STEP; i++) {
-            resize(i * RESIZE_STEP);
-        }
     };
 
     useEffect(() => {

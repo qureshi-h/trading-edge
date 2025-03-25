@@ -1,18 +1,19 @@
 'use client';
 
-import React, { useState, useRef, useCallback, useLayoutEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 
 import Text from 'antd/es/typography/Text';
+import { AnimatePresence } from 'framer-motion';
 import { Tabs, Spin, notification, Flex } from 'antd';
-import { motion, AnimatePresence } from 'framer-motion';
 
 import StockInfo from './analysis/StockInfo';
-import StockReport from './analysis/StockReport';
 import NewsContainer from './news/Container';
+import StockReport from './analysis/StockReport';
+import { AnimatedContainer } from '@/components/AnimatedContainer';
 
-import { Stock, StockAnalysis } from '@/types/stocks';
 import { NewsResponse } from '@/types/news';
 import { getDateFormatted } from '@/utils/dates';
+import { Stock, StockAnalysis } from '@/types/stocks';
 
 interface TabsContainerProps {
     currentDate: string;
@@ -21,12 +22,7 @@ interface TabsContainerProps {
     stockCode: string;
 }
 
-const animationDuration = 0.5;
 const defaultTab = 'analysis';
-const tabItems = [
-    { label: 'Analysis', key: 'analysis' },
-    { label: 'News', key: 'news' },
-];
 
 const TabsContainer: React.FC<TabsContainerProps> = ({
     currentDate,
@@ -34,12 +30,31 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
     stockAnalysis,
     stockCode,
 }) => {
-    const contentRef = useRef<HTMLDivElement>(null);
-
     const [activeTab, setActiveTab] = useState(defaultTab);
     const [loading, setLoading] = useState<boolean>(false);
     const [newsData, setNewsData] = useState<NewsResponse[]>();
-    const [contentHeight, setContentHeight] = useState<number | 'auto'>('auto');
+
+    const tabItems = [
+        {
+            label: 'Analysis',
+            key: 'analysis',
+            items: (
+                <React.Fragment>
+                    {' '}
+                    <StockInfo stockInfo={stockInfo} plotImage={stockAnalysis?.image ?? null} />
+                    <StockReport
+                        stockCode={stockCode}
+                        defaultStockAnalyses={{ [currentDate]: stockAnalysis }}
+                    />
+                </React.Fragment>
+            ),
+        },
+        {
+            label: 'News',
+            key: 'news',
+            items: <NewsContainer stockCode={stockCode} newsData={newsData ?? []} />,
+        },
+    ];
 
     const fetchNewsData = async (stockCode: string) => {
         setLoading(true);
@@ -65,32 +80,13 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
         }
     };
 
-    const resize = useCallback(
-        (delay = 50) =>
-            setTimeout(() => {
-                if (contentRef.current) {
-                    setContentHeight(contentRef.current.scrollHeight);
-                }
-            }, delay),
-        [],
-    );
-
-    useLayoutEffect(() => {
-        const timeout = resize();
-
-        return () => clearTimeout(timeout);
-    }, [activeTab, loading, resize]);
-
     const handleTabChange = useCallback(
         async (activeKey: string) => {
             if (activeKey === 'news' && newsData === undefined) {
                 await fetchNewsData(stockCode);
                 setActiveTab(activeKey);
             } else {
-                setContentHeight(0);
-                setTimeout(() => {
-                    setActiveTab(activeKey);
-                }, animationDuration * 1100);
+                setActiveTab(activeKey);
             }
         },
         [newsData, stockCode],
@@ -110,70 +106,32 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
                 aria-label="Stock Tabs"
             />
 
-            <motion.div
-                animate={{ height: contentHeight }}
-                initial={{ height: 0 }}
-                transition={{ duration: animationDuration, ease: 'easeInOut' }}
-                exit={{ height: 0 }}
-                layout
-                className="overflow-hidden"
-            >
-                <AnimatePresence mode="wait">
-                    {loading ? (
-                        <motion.div
-                            key="loading"
-                            ref={contentRef}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ duration: animationDuration, delay: animationDuration }}
-                        >
-                            <Flex
-                                vertical
-                                className="p-5"
-                                align="center"
-                                justify="center"
-                                gap="1rem"
-                            >
-                                <Spin aria-label="Loading" className="w-full" />
-                                <Text className="">Fetching Latest News...</Text>
-                            </Flex>
-                        </motion.div>
-                    ) : activeTab === 'analysis' ? (
-                        <motion.div
-                            key="analysis"
-                            ref={contentRef}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ duration: animationDuration }}
-                        >
-                            <StockInfo
-                                stockInfo={stockInfo}
-                                plotImage={stockAnalysis?.image ?? null}
-                            />
-                            <StockReport
-                                stockCode={stockCode}
-                                defaultStockAnalyses={{ [currentDate]: stockAnalysis }}
-                            />
-                        </motion.div>
-                    ) : (
-                        activeTab === 'news' && (
-                            <motion.div
-                                key="news"
-                                ref={contentRef}
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ duration: animationDuration }}
-                            >
-                                <NewsContainer
-                                    stockCode={stockCode}
-                                    newsData={newsData ?? []}
-                                    resize={resize}
-                                />
-                            </motion.div>
-                        )
-                    )}
-                </AnimatePresence>
-            </motion.div>
+            <AnimatePresence mode="wait">
+                {loading ? (
+                    <AnimatedContainer key="loading">
+                        <Flex vertical className="p-5" align="center" justify="center" gap="1rem">
+                            <Spin aria-label="Loading" className="w-full" />
+                            <Text className="">Fetching Latest News...</Text>
+                        </Flex>
+                    </AnimatedContainer>
+                ) : (
+                    tabItems.map(
+                        (item) =>
+                            activeTab === item.key && (
+                                <AnimatedContainer key={item.key}>
+                                    <StockInfo
+                                        stockInfo={stockInfo}
+                                        plotImage={stockAnalysis?.image ?? null}
+                                    />
+                                    <StockReport
+                                        stockCode={stockCode}
+                                        defaultStockAnalyses={{ [currentDate]: stockAnalysis }}
+                                    />
+                                </AnimatedContainer>
+                            ),
+                    )
+                )}
+            </AnimatePresence>
         </React.Fragment>
     );
 };
